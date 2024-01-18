@@ -50,8 +50,9 @@ export class FileController {
       const extension = extname(file.originalname).toLowerCase();
       const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
       const metricsSignature = await this.signature.getFile(json);
-      await this.year.getFile(json);
-      return ok(metricsSignature);
+      const metricsYear = await this.year.getFile(json);
+      const body = {metricsSignature, metricsYear}
+      return ok(body);
     } catch (error) {
       console.error(error);
       return serverError(error);
