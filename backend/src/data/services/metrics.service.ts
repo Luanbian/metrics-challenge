@@ -29,7 +29,18 @@ export class MetricsService {
     const MRRDays360 = this.MRRforDays360Signature(separated.days360);
     const MRRAnnually = this.MRRforAnnuallySignature(separated.annually);
     const MRRBiennial = this.MRRforBiennialSignature(separated.biennial);
+    const MRR = this.monthlyRecurringRevenue(MRRMonthly, MRRDays360, MRRAnnually, MRRBiennial)
+    console.log(MRR);
     return separated;
+  }
+
+  private monthlyRecurringRevenue(
+    MRRMonthly: MRRPerSignature,
+    MRRDays360: MRRPerSignature,
+    MRRAnnually: MRRPerSignature,
+    MRRBiennial: MRRPerSignature): string {
+      const value = Number(MRRMonthly.value) + Number(MRRDays360.value) + Number(MRRAnnually.value) + Number(MRRBiennial.value);
+      return value.toFixed(2);
   }
 
   private separatePerTypeOfSignature (json: IExcelModel[]): Itypesignature {
