@@ -25,8 +25,9 @@ export class MetricsService {
       json = await csvToJson(file.path);
     }
     const separated = this.separatePerTypeOfSignature(json);
-    const MMRMonthly = this.MRRforMonthlySignature(separated.monthly);
-    console.log(MMRMonthly);
+    const MRRMonthly = this.MRRforMonthlySignature(separated.monthly);
+    const MRRDays360 = this.MRRforDays360Signature(separated.days360);
+    const MRRAnnually = this.MRRforAnnuallySignature(separated.annually);
     return separated;
   }
 
@@ -61,9 +62,31 @@ export class MetricsService {
   }
 
   private MRRforMonthlySignature (monthly: IExcelModel[]): MRRPerSignature {
-    const value = monthly.reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0).toFixed(2);
+    const value = monthly
+      .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0)
+      .toFixed(2);
     return {
       numberOfClients: monthly.length,
+      value
+    }
+  }
+
+  private MRRforDays360Signature (days360: IExcelModel[]): MRRPerSignature {
+    const value = (days360
+      .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0) / 12)
+      .toFixed(2);
+    return {
+      numberOfClients: days360.length,
+      value
+    }
+  }
+
+  private MRRforAnnuallySignature(annually: IExcelModel[]): MRRPerSignature {
+    const value = (annually
+      .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0) / 12)
+      .toFixed(2);
+    return {
+      numberOfClients: annually.length,
       value
     }
   }
