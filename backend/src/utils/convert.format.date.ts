@@ -1,6 +1,6 @@
 import { format, isValid } from "date-fns";
 
-export const convertAndFormatDate = (value: number | null | undefined, fieldName: string): string | null => {
+export const convertAndFormatDate = (value: number | null | undefined): string | null => {
   const excelBaseDate = new Date('1899-12-30').getTime();
   const secondsPerDay = 86400;
   const milisecondsPerSecond = 1000;
@@ -22,7 +22,7 @@ export const convertAndFormatDate = (value: number | null | undefined, fieldName
       const formatedDate = format(originalHour, dateFormat);
       return formatedDate;
     } catch (error) {
-      console.error(`Erro ao converter data para o campo "${fieldName}": `, error);
+      console.error(`Erro ao converter data para o campo "${value}": `, error);
     }
   }
   return null;
