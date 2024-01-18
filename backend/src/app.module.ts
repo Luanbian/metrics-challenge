@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { FileController } from './presentation/controllers/file.controller';
 import { MulterModule } from '@nestjs/platform-express';
-import { MetricsService } from './data/services/metrics.service';
+import { MetricsSignatureService } from './data/services/metrics.signature.service';
 
 @Module({
   imports: [
@@ -10,6 +10,6 @@ import { MetricsService } from './data/services/metrics.service';
     })
   ],
   controllers: [FileController],
-  providers: [MetricsService],
+  providers: [MetricsSignatureService],
 })
 export class AppModule {}

@@ -24,7 +24,7 @@ export interface IMetrics {
 }
 
 @Injectable()
-export class MetricsService {
+export class MetricsSignatureService {
   public async getFile(file: Express.Multer.File, extension: string): Promise<IMetrics> {
     const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
     const separated = this.separatePerTypeOfSignature(json);

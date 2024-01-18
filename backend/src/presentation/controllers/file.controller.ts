@@ -4,13 +4,13 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { HttpResponse } from 'src/@types/http';
 import { badRequest, ok, serverError } from '../helpers/http.helper';
-import { MetricsService } from 'src/data/services/metrics.service';
+import { MetricsSignatureService } from 'src/data/services/metrics.signature.service';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
 @Controller('api/file')
 export class FileController {
-  constructor (private readonly service: MetricsService) {}
+  constructor (private readonly service: MetricsSignatureService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file', {
