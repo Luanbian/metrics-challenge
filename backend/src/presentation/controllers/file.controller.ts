@@ -2,8 +2,10 @@ import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { HttpResponse } from 'src/@types/http';
+import { badRequest, ok } from '../helpers/http.helper';
 
-const allowedFileTypes = ['.txt'];
+const allowedFileTypes = ['.xlsx', '.csv'];
 
 @Controller('api/file')
 export class FileController {
@@ -31,10 +33,10 @@ export class FileController {
       }
     },
   }))
-  async receiveFile(@UploadedFile() file: Express.Multer.File): Promise<any> {
+  async receiveFile(@UploadedFile() file: Express.Multer.File): Promise<HttpResponse> {
     if (!file) {
-      throw new Error('Nenhum arquivo recebido');
+      return badRequest('Arquivo não recebido');
     }
-    return { message: 'Arquivo enviado com sucesso!', filename: file.filename };
+    return ok('arquivo recebido com sucesso');
   }
 }

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { FileController } from './file.controller';
+import { FileController } from './presentation/controllers/file.controller';
 import { MulterModule } from '@nestjs/platform-express';
-import { AppService } from './app.service';
+import { AppService } from './data/services/app.service';
 
 @Module({
   imports: [
