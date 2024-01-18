@@ -16,7 +16,6 @@ export interface MRRPerSignature {
 }
 
 export interface IMetrics {
-  separated: Itypesignature
   MRRMonthly: MRRPerSignature
   MRRDays360: MRRPerSignature
   MRRAnnually: MRRPerSignature
@@ -39,8 +38,7 @@ export class MetricsService {
       MRRMonthly,
       MRRDays360,
       MRRAnnually,
-      MRRBiennial,
-      separated
+      MRRBiennial
     };
   }
 
