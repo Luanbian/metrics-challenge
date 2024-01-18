@@ -4,7 +4,7 @@ export const convertAndFormatDate = (value: number | null | undefined, fieldName
   const excelBaseDate = new Date('1899-12-30').getTime();
   const secondsPerDay = 86400;
   const milisecondsPerSecond = 1000;
-  const dateFormat = 'd/M/yy HH:mm';
+  const dateFormat = 'MM/dd/yy HH:mm';
 
   if (value !== null && value !== undefined) {
     try {
@@ -16,7 +16,11 @@ export const convertAndFormatDate = (value: number | null | undefined, fieldName
       if (!isValid(date)) {
         return null;
       }
-      return format(date, dateFormat);
+      const originalDate = format(date, dateFormat);
+      const originalHour = new Date(originalDate);
+      originalHour.setHours(originalHour.getHours() + 3);
+      const formatedDate = format(originalHour, dateFormat);
+      return formatedDate;
     } catch (error) {
       console.error(`Erro ao converter data para o campo "${fieldName}": `, error);
     }
