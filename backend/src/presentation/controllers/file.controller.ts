@@ -7,12 +7,16 @@ import { badRequest, ok, serverError } from '../helpers/http.helper';
 import { MetricsSignatureService } from 'src/data/services/metrics.signature.service';
 import { xlsxToJson } from 'src/utils/xlsx.to.json';
 import { csvToJson } from 'src/utils/csv.to.json';
+import { MetricsYearService } from 'src/data/services/metrics.year.service';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
 @Controller('api/file')
 export class FileController {
-  constructor (private readonly service: MetricsSignatureService) {}
+  constructor (
+    private readonly signature: MetricsSignatureService,
+    private readonly year: MetricsYearService
+  ) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file', {
@@ -45,7 +49,8 @@ export class FileController {
     try {
       const extension = extname(file.originalname).toLowerCase();
       const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
-      const metricsSignature = await this.service.getFile(json);
+      const metricsSignature = await this.signature.getFile(json);
+      await this.year.getFile(json);
       return ok(metricsSignature);
     } catch (error) {
       console.error(error);
