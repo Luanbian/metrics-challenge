@@ -3,12 +3,15 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { HttpResponse } from 'src/@types/http';
-import { badRequest, ok } from '../helpers/http.helper';
+import { badRequest, ok, serverError } from '../helpers/http.helper';
+import { FileService } from 'src/data/services/file.service';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
 @Controller('api/file')
 export class FileController {
+  constructor (private readonly service: FileService) {}
+
   @Post()
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
@@ -37,6 +40,12 @@ export class FileController {
     if (!file) {
       return badRequest('Arquivo não recebido');
     }
-    return ok('arquivo recebido com sucesso');
+    try {
+      this.service.getFile(file);
+      return ok('arquivo recebido com sucesso');
+    } catch (error) {
+      console.error(error);
+      return serverError(error);
+    }
   }
 }
