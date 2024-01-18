@@ -19,7 +19,6 @@ export class FileController {
       }
     }),
     fileFilter: (req, file, callback) => {
-      console.log('File:', file); 
       if (!file.originalname || !file) {
         return callback(new Error('Nome do arquivo não encontrado'), false);
       }
@@ -36,7 +35,6 @@ export class FileController {
     if (!file) {
       throw new Error('Nenhum arquivo recebido');
     }
-    console.log('hihi:', file);
     return { message: 'Arquivo enviado com sucesso!', filename: file.filename };
   }
 }
