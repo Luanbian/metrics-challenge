@@ -3,7 +3,7 @@ import { csvToJson } from 'src/utils/csv.to.json';
 import { xlsxToJson } from 'src/utils/xlsx.to.json';
 
 @Injectable()
-export class FileService {
+export class MetricsService {
   public async getFile(file: Express.Multer.File, extension: string): Promise<unknown[]> {
     let json: unknown[];
     if(extension === '.xlsx') {

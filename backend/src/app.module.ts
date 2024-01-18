@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { FileController } from './presentation/controllers/file.controller';
 import { MulterModule } from '@nestjs/platform-express';
-import { FileService } from './data/services/file.service';
+import { MetricsService } from './data/services/metrics.service';
 
 @Module({
   imports: [
@@ -10,6 +10,6 @@ import { FileService } from './data/services/file.service';
     })
   ],
   controllers: [FileController],
-  providers: [FileService],
+  providers: [MetricsService],
 })
 export class AppModule {}
