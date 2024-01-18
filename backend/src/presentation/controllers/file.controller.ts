@@ -41,8 +41,9 @@ export class FileController {
       return badRequest('Arquivo não recebido');
     }
     try {
-      this.service.getFile(file);
-      return ok('arquivo recebido com sucesso');
+      const extension = extname(file.originalname).toLowerCase();
+      const json = await this.service.getFile(file, extension);
+      return ok(json);
     } catch (error) {
       console.error(error);
       return serverError(error);
