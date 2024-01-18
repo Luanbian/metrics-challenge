@@ -28,6 +28,7 @@ export class MetricsService {
     const MRRMonthly = this.MRRforMonthlySignature(separated.monthly);
     const MRRDays360 = this.MRRforDays360Signature(separated.days360);
     const MRRAnnually = this.MRRforAnnuallySignature(separated.annually);
+    const MRRBiennial = this.MRRforBiennialSignature(separated.biennial);
     return separated;
   }
 
@@ -87,6 +88,16 @@ export class MetricsService {
       .toFixed(2);
     return {
       numberOfClients: annually.length,
+      value
+    }
+  }
+
+  private MRRforBiennialSignature(biennial: IExcelModel[]): MRRPerSignature {
+    const value = (biennial
+      .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0) / 24)
+      .toFixed(2)
+    return {
+      numberOfClients: biennial.length,
       value
     }
   }
