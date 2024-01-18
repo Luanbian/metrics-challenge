@@ -1,5 +1,5 @@
 import * as xlsx from 'xlsx';
-import { format, isValid } from "date-fns";
+import { format } from "date-fns";
 import { IExcelModel, excelMapper } from 'src/data/mapper/excel.mapper';
 
 export const xlsxToJson = (path: string): IExcelModel[] => {
@@ -19,18 +19,12 @@ export const convertAndFormatDate = (value: number | null | undefined): string |
   const excelBaseDate = new Date('1899-12-30').getTime();
   const secondsPerDay = 86400;
   const milisecondsPerSecond = 1000;
-  const dateFormat = 'MM/dd/yy';
+  const dateFormat = 'dd/MM/yy';
 
   if (value !== null && value !== undefined) {
     try {
       const timestamp = value * secondsPerDay * milisecondsPerSecond + excelBaseDate;
-      if (timestamp > Number.MAX_SAFE_INTEGER || timestamp < Number.MIN_SAFE_INTEGER) {
-        return null;
-      }
       const date = new Date(timestamp);
-      if (!isValid(date)) {
-        return null;
-      }
       const formatedDate = format(date, dateFormat);
       return formatedDate;
     } catch (error) {

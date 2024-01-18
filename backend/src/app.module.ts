@@ -3,6 +3,7 @@ import { FileController } from './presentation/controllers/file.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { MetricsSignatureService } from './data/services/metrics.signature.service';
 import { MetricsYearService } from './data/services/metrics.year.service';
+import { MetricsMonthService } from './data/services/metrics.month.service';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { MetricsYearService } from './data/services/metrics.year.service';
     })
   ],
   controllers: [FileController],
-  providers: [MetricsSignatureService, MetricsYearService],
+  providers: [MetricsSignatureService, MetricsYearService, MetricsMonthService],
 })
 export class AppModule {}

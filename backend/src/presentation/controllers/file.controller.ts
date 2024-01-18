@@ -8,6 +8,7 @@ import { MetricsSignatureService } from 'src/data/services/metrics.signature.ser
 import { xlsxToJson } from 'src/utils/xlsx.to.json';
 import { csvToJson } from 'src/utils/csv.to.json';
 import { MetricsYearService } from 'src/data/services/metrics.year.service';
+import { MetricsMonthService } from 'src/data/services/metrics.month.service';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
@@ -15,7 +16,8 @@ const allowedFileTypes = ['.xlsx', '.csv'];
 export class FileController {
   constructor (
     private readonly signature: MetricsSignatureService,
-    private readonly year: MetricsYearService
+    private readonly year: MetricsYearService,
+    private readonly month: MetricsMonthService
   ) {}
 
   @Post()
@@ -51,7 +53,8 @@ export class FileController {
       const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
       const metricsSignature = await this.signature.getFile(json);
       const metricsYear = await this.year.getFile(json);
-      const body = {metricsSignature, metricsYear}
+      const metricsMonth = await this.month.getFile(metricsYear['2022']);
+      const body = {metricsSignature, metricsYear, metricsMonth}
       return ok(body);
     } catch (error) {
       console.error(error);
