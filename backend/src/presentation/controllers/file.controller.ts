@@ -5,6 +5,8 @@ import { extname } from 'path';
 import { HttpResponse } from 'src/@types/http';
 import { badRequest, ok, serverError } from '../helpers/http.helper';
 import { MetricsSignatureService } from 'src/data/services/metrics.signature.service';
+import { xlsxToJson } from 'src/utils/xlsx.to.json';
+import { csvToJson } from 'src/utils/csv.to.json';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
@@ -42,8 +44,9 @@ export class FileController {
     }
     try {
       const extension = extname(file.originalname).toLowerCase();
-      const json = await this.service.getFile(file, extension);
-      return ok(json);
+      const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
+      const metricsSignature = await this.service.getFile(json);
+      return ok(metricsSignature);
     } catch (error) {
       console.error(error);
       return serverError(error);

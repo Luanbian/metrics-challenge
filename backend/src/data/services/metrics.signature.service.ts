@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { csvToJson } from 'src/utils/csv.to.json';
-import { xlsxToJson } from 'src/utils/xlsx.to.json';
 import { IExcelModel } from '../mapper/excel.mapper';
 
 export interface Itypesignature {
@@ -25,8 +23,7 @@ export interface IMetrics {
 
 @Injectable()
 export class MetricsSignatureService {
-  public async getFile(file: Express.Multer.File, extension: string): Promise<IMetrics> {
-    const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
+  public async getFile(json: IExcelModel[]): Promise<IMetrics> {
     const separated = this.separatePerTypeOfSignature(json);
     const MRRMonthly = this.MRRforSignature(separated.monthly, 1);
     const MRRDays360 = this.MRRforSignature(separated.days360, 12);
