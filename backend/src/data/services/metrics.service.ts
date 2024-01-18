@@ -15,23 +15,33 @@ export interface MRRPerSignature {
   value: string
 }
 
+export interface IMetrics {
+  separated: Itypesignature
+  MRRMonthly: MRRPerSignature
+  MRRDays360: MRRPerSignature
+  MRRAnnually: MRRPerSignature
+  MRRBiennial: MRRPerSignature
+  MRR: string
+}
+
 @Injectable()
 export class MetricsService {
-  public async getFile(file: Express.Multer.File, extension: string): Promise<Itypesignature> {
-    let json: IExcelModel[];
-    if(extension === '.xlsx') {
-      json = xlsxToJson(file.path);
-    } else {
-      json = await csvToJson(file.path);
-    }
+  public async getFile(file: Express.Multer.File, extension: string): Promise<IMetrics> {
+    const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
     const separated = this.separatePerTypeOfSignature(json);
-    const MRRMonthly = this.MRRforMonthlySignature(separated.monthly);
-    const MRRDays360 = this.MRRforDays360Signature(separated.days360);
-    const MRRAnnually = this.MRRforAnnuallySignature(separated.annually);
-    const MRRBiennial = this.MRRforBiennialSignature(separated.biennial);
+    const MRRMonthly = this.MRRforSignature(separated.monthly, 1);
+    const MRRDays360 = this.MRRforSignature(separated.days360, 12);
+    const MRRAnnually = this.MRRforSignature(separated.annually, 12);
+    const MRRBiennial = this.MRRforSignature(separated.biennial, 24);
     const MRR = this.monthlyRecurringRevenue(MRRMonthly, MRRDays360, MRRAnnually, MRRBiennial)
-    console.log(MRR);
-    return separated;
+    return {
+      MRR,
+      MRRMonthly,
+      MRRDays360,
+      MRRAnnually,
+      MRRBiennial,
+      separated
+    };
   }
 
   private monthlyRecurringRevenue(
@@ -41,6 +51,16 @@ export class MetricsService {
     MRRBiennial: MRRPerSignature): string {
       const value = Number(MRRMonthly.value) + Number(MRRDays360.value) + Number(MRRAnnually.value) + Number(MRRBiennial.value);
       return value.toFixed(2);
+  }
+
+  private MRRforSignature (array: IExcelModel[], divisor: number): MRRPerSignature {
+    const value = (array
+      .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0) / divisor)
+      .toFixed(2);
+    return {
+      numberOfClients: array.length,
+      value
+    }
   }
 
   private separatePerTypeOfSignature (json: IExcelModel[]): Itypesignature {
@@ -71,45 +91,5 @@ export class MetricsService {
       }
     }
     return separate;
-  }
-
-  private MRRforMonthlySignature (monthly: IExcelModel[]): MRRPerSignature {
-    const value = monthly
-      .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0)
-      .toFixed(2);
-    return {
-      numberOfClients: monthly.length,
-      value
-    }
-  }
-
-  private MRRforDays360Signature (days360: IExcelModel[]): MRRPerSignature {
-    const value = (days360
-      .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0) / 12)
-      .toFixed(2);
-    return {
-      numberOfClients: days360.length,
-      value
-    }
-  }
-
-  private MRRforAnnuallySignature(annually: IExcelModel[]): MRRPerSignature {
-    const value = (annually
-      .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0) / 12)
-      .toFixed(2);
-    return {
-      numberOfClients: annually.length,
-      value
-    }
-  }
-
-  private MRRforBiennialSignature(biennial: IExcelModel[]): MRRPerSignature {
-    const value = (biennial
-      .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0) / 24)
-      .toFixed(2)
-    return {
-      numberOfClients: biennial.length,
-      value
-    }
   }
 }
