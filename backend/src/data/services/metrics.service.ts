@@ -10,6 +10,11 @@ export interface Itypesignature {
   biennial: IExcelModel[]
 }
 
+export interface MRRPerSignature {
+  numberOfClients: number,
+  value: string
+}
+
 @Injectable()
 export class MetricsService {
   public async getFile(file: Express.Multer.File, extension: string): Promise<Itypesignature> {
@@ -20,6 +25,8 @@ export class MetricsService {
       json = await csvToJson(file.path);
     }
     const separated = this.separatePerTypeOfSignature(json);
+    const MMRMonthly = this.MRRforMonthlySignature(separated.monthly);
+    console.log(MMRMonthly);
     return separated;
   }
 
@@ -51,5 +58,13 @@ export class MetricsService {
       }
     }
     return separate;
+  }
+
+  private MRRforMonthlySignature (monthly: IExcelModel[]): MRRPerSignature {
+    const value = monthly.reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0), 0).toFixed(2);
+    return {
+      numberOfClients: monthly.length,
+      value
+    }
   }
 }
