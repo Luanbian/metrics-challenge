@@ -8,6 +8,7 @@ import { MetricsSignatureService } from 'src/data/services/metrics.signature.ser
 import { xlsxToJson } from 'src/utils/xlsx.to.json';
 import { csvToJson } from 'src/utils/csv.to.json';
 import { MetricsYearService } from 'src/data/services/metrics.year.service';
+import { ChurnRateService } from 'src/data/services/churn.rate.service';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
@@ -16,6 +17,7 @@ export class FileController {
   constructor (
     private readonly mrr: MetricsSignatureService,
     private readonly year: MetricsYearService,
+    private readonly churn: ChurnRateService
   ) {}
 
   @Post()
@@ -52,13 +54,14 @@ export class FileController {
 
       const years = await this.year.metrics(json);
       const MRR = await this.mrr.metrics(json, years);
+      const churn = await this.churn.metrics(json);
       const metrics = {
         "2022": MRR.perYear[2022],
         "2023": MRR.perYear[2023],
         "2024": MRR.perYear[2024],
         "2025":MRR.perYear[2025]
       }
-      const body = {general: MRR.general, metrics}
+      const body = {general: MRR.general, metrics, churn}
       return ok(body);
     } catch (error) {
       console.error(error);

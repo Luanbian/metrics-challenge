@@ -27,7 +27,7 @@ export class ChurnRateService {
       upgrades: []
     }
     for (const item of json) {
-      const { status } = item;
+      const status = item.status.trim();
 
       switch (status) {
         case 'Ativa':
@@ -39,11 +39,14 @@ export class ChurnRateService {
         case 'Trial cancelado':
           separate.canceledsTrial.push(item);
           break;
+        case 'Atrasada':
+          separate.overDues.push(item);
+          break;
         case 'Upgrade':
           separate.upgrades.push(item);
           break;
         default:
-          throw new Error(`Status do ${item} não reconhecido`);
+          throw new Error(`Status do ${item.subscriberID} não reconhecido`);
       }
     }
     return separate;
