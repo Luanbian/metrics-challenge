@@ -8,7 +8,6 @@ import { MetricsSignatureService } from 'src/data/services/metrics.signature.ser
 import { xlsxToJson } from 'src/utils/xlsx.to.json';
 import { csvToJson } from 'src/utils/csv.to.json';
 import { MetricsYearService } from 'src/data/services/metrics.year.service';
-import { MetricsMonthService } from 'src/data/services/metrics.month.service';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
@@ -17,7 +16,6 @@ export class FileController {
   constructor (
     private readonly signature: MetricsSignatureService,
     private readonly year: MetricsYearService,
-    private readonly month: MetricsMonthService
   ) {}
 
   @Post()
@@ -54,10 +52,10 @@ export class FileController {
 
       const general = await this.signature.getFile(json);
       const years = await this.year.metrics(json);
-      const metricsYear22 = await this.month.metrics(years['2022']);
-      const metricsYear23 = await this.month.metrics(years['2023']);
-      const metricsYear24 = await this.month.metrics(years['2024']);
-      const metricsYear25 = await this.month.metrics(years['2025']);
+      const metricsYear22 = await this.signature.getFile(years["2022"]);
+      const metricsYear23 = await this.signature.getFile(years["2023"]);
+      const metricsYear24 = await this.signature.getFile(years["2024"]);
+      const metricsYear25 = await this.signature.getFile(years["2025"]);
       const metrics = {
         "2022": metricsYear22,
         "2023": metricsYear23,
