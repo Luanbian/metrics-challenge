@@ -2,21 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { IExcelModel } from "../mapper/excel.mapper";
 import { format, parse } from "date-fns";
 import { ptBR } from 'date-fns/locale';
-
-export interface Months {
-  jan: IExcelModel[]
-  fev: IExcelModel[]
-  mar: IExcelModel[]
-  abr: IExcelModel[]
-  mai: IExcelModel[]
-  jun: IExcelModel[]
-  jul: IExcelModel[]
-  ago: IExcelModel[]
-  set: IExcelModel[]
-  out: IExcelModel[]
-  nov: IExcelModel[]
-  dez: IExcelModel[]
-}
+import { Months } from "../interfaces/month.service.protocol";
 
 @Injectable()
 export class MetricsMonthService {

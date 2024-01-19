@@ -1,12 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { IExcelModel } from "../mapper/excel.mapper";
+import { Years } from "../interfaces/year.service.protocol";
 
-export interface Years {
-  '2022': IExcelModel[]
-  '2023': IExcelModel[]
-  '2024': IExcelModel[]
-  '2025': IExcelModel[]
-}
 @Injectable()
 export class MetricsYearService {
   public async metrics(json: IExcelModel[]): Promise<Years> {
