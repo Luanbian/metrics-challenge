@@ -50,19 +50,15 @@ export class FileController {
       const extension = extname(file.originalname).toLowerCase();
       const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
 
-      const general = await this.signature.getFile(json);
       const years = await this.year.metrics(json);
-      const metricsYear22 = await this.signature.getFile(years["2022"]);
-      const metricsYear23 = await this.signature.getFile(years["2023"]);
-      const metricsYear24 = await this.signature.getFile(years["2024"]);
-      const metricsYear25 = await this.signature.getFile(years["2025"]);
+      const MRR = await this.signature.metrics(json, years);
       const metrics = {
-        "2022": metricsYear22,
-        "2023": metricsYear23,
-        "2024": metricsYear24,
-        "2025":metricsYear25
+        "2022": MRR.perYear[2022],
+        "2023": MRR.perYear[2022],
+        "2024": MRR.perYear[2022],
+        "2025":MRR.perYear[2022]
       }
-      const body = {general, metrics}
+      const body = {general: MRR.general, metrics}
       return ok(body);
     } catch (error) {
       console.error(error);
