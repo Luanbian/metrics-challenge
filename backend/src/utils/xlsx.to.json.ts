@@ -25,6 +25,7 @@ export const convertAndFormatDate = (value: number | null | undefined): string |
     try {
       const timestamp = value * secondsPerDay * milisecondsPerSecond + excelBaseDate;
       const date = new Date(timestamp);
+      date.setDate(date.getDate() + 1);
       const formatedDate = format(date, dateFormat);
       return formatedDate;
     } catch (error) {
