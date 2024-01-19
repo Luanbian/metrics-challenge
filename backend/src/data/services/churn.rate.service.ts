@@ -12,10 +12,17 @@ export interface SignatureStatus {
 @Injectable()
 export class ChurnRateService {
   public async metrics (json: IExcelModel[]) {
-    const general = this.separateActivesAndCanceleds(json);
+    const general = this.calculateGenerealChurnRate(json);
     return {
       general
     }
+  }
+
+  private calculateGenerealChurnRate (json: IExcelModel[]) {
+    const separate = this.separateActivesAndCanceleds(json);
+    const canceleds = separate.canceleds.length + separate.canceledsTrial.length;
+    const churnRate = ((canceleds / json.length) * 100).toFixed(2);
+    return `${churnRate}%`;
   }
 
   private separateActivesAndCanceleds (json: IExcelModel[]) {
