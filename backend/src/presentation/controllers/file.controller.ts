@@ -54,9 +54,9 @@ export class FileController {
       const MRR = await this.signature.metrics(json, years);
       const metrics = {
         "2022": MRR.perYear[2022],
-        "2023": MRR.perYear[2022],
-        "2024": MRR.perYear[2022],
-        "2025":MRR.perYear[2022]
+        "2023": MRR.perYear[2023],
+        "2024": MRR.perYear[2024],
+        "2025":MRR.perYear[2025]
       }
       const body = {general: MRR.general, metrics}
       return ok(body);

@@ -8,7 +8,7 @@ export class MetricsSignatureService {
   public async metrics(json: IExcelModel[], years: Years): Promise<IMetrics> {
     const perYear = {};
     for (const year in years) {
-      perYear[year] = this.calculateYearlyMRR(years, year);
+      perYear[year] = this.calculateYearlyMRR(years[year]);
     }
     const general = this.calculateGeneralMRR(json);
     return {
@@ -35,10 +35,9 @@ export class MetricsSignatureService {
     };
   };
 
-  private calculateYearlyMRR (years: Years ,year: string) {
-    const signatureValues = this.getSignatureValues(this.separatePerTypeOfSignature(years[year]));
-    const { MRRMonthly, MRRDays360, MRRAnnually, MRRBiennial } =
-      signatureValues;
+  private calculateYearlyMRR (year: IExcelModel[]) {
+    const signatureValues = this.getSignatureValues(this.separatePerTypeOfSignature(year));
+    const { MRRMonthly, MRRDays360, MRRAnnually, MRRBiennial } = signatureValues;
     const MRR = this.monthlyRecurringRevenue(
       MRRMonthly,
       MRRDays360,
