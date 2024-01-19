@@ -9,6 +9,7 @@ import { xlsxToJson } from 'src/utils/xlsx.to.json';
 import { csvToJson } from 'src/utils/csv.to.json';
 import { MetricsYearService } from 'src/data/services/metrics.year.service';
 import { ChurnRateService } from 'src/data/services/churn.rate.service';
+import { MetricsMonthService } from 'src/data/services/metrics.month.service';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
@@ -17,7 +18,8 @@ export class FileController {
   constructor (
     private readonly mrr: MetricsSignatureService,
     private readonly year: MetricsYearService,
-    private readonly churn: ChurnRateService
+    private readonly churn: ChurnRateService,
+    private readonly month: MetricsMonthService
   ) {}
 
   @Post()
@@ -56,9 +58,10 @@ export class FileController {
       const MRR = await this.mrr.metrics(json, yearsMRR);
 
       const yearsChurn = await this.year.metrics(json, 'churn');
+      const monthChurn = await this.month.metrics(yearsChurn);
       const churn = await this.churn.metrics(json, yearsChurn);
 
-      const body = {MRR, churn}
+      const body = {monthChurn}
       return ok(body);
     } catch (error) {
       console.error(error);
