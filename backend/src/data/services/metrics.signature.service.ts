@@ -8,16 +8,16 @@ export class MetricsSignatureService {
   public async metrics(json: IExcelModel[], years: Years): Promise<IMetrics> {
     const perYear = {};
     for (const year in years) {
-      perYear[year] = this.calculateYearlyMRR(years[year]);
+      perYear[year] = this.calculateMRR(years[year]);
     }
-    const general = this.calculateGeneralMRR(json);
+    const general = this.calculateMRR(json);
     return {
       general,
       perYear,
     };
   }
 
-  private calculateGeneralMRR (json: IExcelModel[]) {
+  private calculateMRR (json: IExcelModel[]): IMRRtypes {
     const signatureValues = this.getSignatureValues(this.separatePerTypeOfSignature(json));
     const { MRRMonthly, MRRDays360, MRRAnnually, MRRBiennial } = signatureValues;
     const MRR = this.monthlyRecurringRevenue(
@@ -32,24 +32,6 @@ export class MetricsSignatureService {
       MRRAnnually,
       MRRBiennial,
       MRR,
-    };
-  };
-
-  private calculateYearlyMRR (year: IExcelModel[]): IMRRtypes {
-    const signatureValues = this.getSignatureValues(this.separatePerTypeOfSignature(year));
-    const { MRRMonthly, MRRDays360, MRRAnnually, MRRBiennial } = signatureValues;
-    const MRR = this.monthlyRecurringRevenue(
-      MRRMonthly,
-      MRRDays360,
-      MRRAnnually,
-      MRRBiennial,
-    );
-    return {
-      MRR,
-      MRRMonthly,
-      MRRDays360,
-      MRRAnnually,
-      MRRBiennial,
     };
   };
 

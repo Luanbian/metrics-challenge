@@ -54,14 +54,8 @@ export class FileController {
 
       const years = await this.year.metrics(json);
       const MRR = await this.mrr.metrics(json, years);
-      const churn = await this.churn.metrics(json);
-      const metrics = {
-        "2022": MRR.perYear[2022],
-        "2023": MRR.perYear[2023],
-        "2024": MRR.perYear[2024],
-        "2025":MRR.perYear[2025]
-      }
-      const body = {general: MRR.general, metrics, churn}
+      const churn = await this.churn.metrics(json, years);
+      const body = {MRR, churn}
       return ok(body);
     } catch (error) {
       console.error(error);
