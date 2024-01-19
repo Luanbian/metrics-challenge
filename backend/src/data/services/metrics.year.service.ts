@@ -9,7 +9,7 @@ export interface Years {
 }
 @Injectable()
 export class MetricsYearService {
-  public async getFile(json: IExcelModel[]): Promise<Years> {
+  public async metrics(json: IExcelModel[]): Promise<Years> {
     const separatePerYear = this.separatePerYear(json);
     return separatePerYear;
   }

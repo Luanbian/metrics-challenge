@@ -20,7 +20,7 @@ export interface Months {
 
 @Injectable()
 export class MetricsMonthService {
-  public async getFile(year:IExcelModel[]): Promise<Months> {
+  public async metrics(year:IExcelModel[]): Promise<Months> {
     const separatePerMonth = this.separatePerMonth(year);
     return separatePerMonth;
   }

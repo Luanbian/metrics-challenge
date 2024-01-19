@@ -51,14 +51,20 @@ export class FileController {
     try {
       const extension = extname(file.originalname).toLowerCase();
       const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
-      const metricsSignature = await this.signature.getFile(json);
-      const metricsYear = await this.year.getFile(json);
-      const metricsMonth1 = await this.month.getFile(metricsYear['2022']);
-      const metricsMonth2 = await this.month.getFile(metricsYear['2023']);
-      const metricsMonth3 = await this.month.getFile(metricsYear['2024']);
-      const metricsMonth4 = await this.month.getFile(metricsYear['2025']);
-      const metrics = [metricsMonth1, metricsMonth2, metricsMonth3, metricsMonth4]
-      const body = {metricsSignature, metricsYear, metrics}
+
+      const general = await this.signature.getFile(json);
+      const years = await this.year.metrics(json);
+      const metricsYear22 = await this.month.metrics(years['2022']);
+      const metricsYear23 = await this.month.metrics(years['2023']);
+      const metricsYear24 = await this.month.metrics(years['2024']);
+      const metricsYear25 = await this.month.metrics(years['2025']);
+      const metrics = {
+        "2022": metricsYear22,
+        "2023": metricsYear23,
+        "2024": metricsYear24,
+        "2025":metricsYear25
+      }
+      const body = {general, metrics}
       return ok(body);
     } catch (error) {
       console.error(error);
