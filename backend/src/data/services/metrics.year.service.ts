@@ -4,12 +4,12 @@ import { Years } from "../interfaces/year.service.protocol";
 
 @Injectable()
 export class MetricsYearService {
-  public async metrics(json: IExcelModel[]): Promise<Years> {
-    const separatePerYear = this.separatePerYear(json);
+  public async metrics(json: IExcelModel[], type: string): Promise<Years> {
+    const separatePerYear = this.separatePerYear(json, type);
     return separatePerYear;
   }
 
-  private separatePerYear(json: IExcelModel[]): Years {
+  private separatePerYear(json: IExcelModel[], type: string): Years {
     const separate: Years = {
       "2022": [],
       "2023": [],
@@ -17,24 +17,20 @@ export class MetricsYearService {
       "2025": []
     }
     for(const item of json) {
-      const { nextCycle } = item;
-      const year = nextCycle[nextCycle.length - 1];
-      
-      switch (year) {
-        case '2':
-          separate["2022"].push(item);
-          break;
-        case '3':
-          separate["2023"].push(item);
-           break;
-        case '4':
-          separate["2024"].push(item);
-          break;
-        case '5':
-          separate["2025"].push(item);
-          break;
-        default:
-          throw new Error(`${item} está fora do limite de validade`);
+      let year: string;
+      if (type === 'mrr') {
+        const { nextCycle } = item;
+        year = nextCycle[nextCycle.length - 1];
+      } else {
+        const { cancellationDate } = item;
+        if (cancellationDate !== null) {
+          year = cancellationDate[cancellationDate.length - 1];
+        } else {
+          year = null;
+        }
+      }
+      if (year !== null) {
+        separate[`202${year}`].push(item);
       }
     }
     return separate;

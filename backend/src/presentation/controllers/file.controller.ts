@@ -52,9 +52,12 @@ export class FileController {
       const extension = extname(file.originalname).toLowerCase();
       const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
 
-      const years = await this.year.metrics(json);
-      const MRR = await this.mrr.metrics(json, years);
-      const churn = await this.churn.metrics(json, years);
+      const yearsMRR = await this.year.metrics(json, 'mrr');
+      const MRR = await this.mrr.metrics(json, yearsMRR);
+
+      const yearsChurn = await this.year.metrics(json, 'churn');
+      const churn = await this.churn.metrics(json, yearsChurn);
+
       const body = {MRR, churn}
       return ok(body);
     } catch (error) {

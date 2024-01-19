@@ -28,8 +28,8 @@ export class MetricsMonthService {
     }
 
     for (const item of year) {
-      const { nextCycle } = item;
-      const date = parse(nextCycle, 'dd/MM/yyyy', new Date());
+      const { cancellationDate } = item;
+      const date = parse(cancellationDate, 'dd/MM/yyyy', new Date());
       const formated = format(date, 'dd/LLL/yyyy', {locale: ptBR});
       const monthKey = formated.split('/')[1].toLowerCase();
       separate[monthKey].push(item);
