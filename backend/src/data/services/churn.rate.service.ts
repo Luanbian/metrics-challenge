@@ -27,8 +27,9 @@ export class ChurnRateService {
   private calculateChurnRate (data: IExcelModel[]) {
     const separate = this.separateActivesAndCanceleds(data);
     const canceleds = separate.canceleds.length + separate.canceledsTrial.length;
-    const churnRate = ((canceleds / data.length) * 100).toFixed(2);
-    return `${churnRate}%`;
+    const calculate = ((canceleds / data.length) * 100)
+    const churnRate = Number.isNaN(calculate) ? 0 : calculate;
+    return `${churnRate.toFixed(2)}%`;
   }
 
   private separateActivesAndCanceleds (json: IExcelModel[]) {
