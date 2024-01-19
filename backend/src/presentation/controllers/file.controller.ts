@@ -14,7 +14,7 @@ const allowedFileTypes = ['.xlsx', '.csv'];
 @Controller('api/file')
 export class FileController {
   constructor (
-    private readonly signature: MetricsSignatureService,
+    private readonly mrr: MetricsSignatureService,
     private readonly year: MetricsYearService,
   ) {}
 
@@ -51,7 +51,7 @@ export class FileController {
       const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
 
       const years = await this.year.metrics(json);
-      const MRR = await this.signature.metrics(json, years);
+      const MRR = await this.mrr.metrics(json, years);
       const metrics = {
         "2022": MRR.perYear[2022],
         "2023": MRR.perYear[2023],

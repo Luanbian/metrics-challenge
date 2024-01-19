@@ -12,21 +12,17 @@ export interface MRRPerSignature {
   value: string;
 }
 
+export interface IMRRtypes {
+  MRRMonthly: MRRPerSignature;
+  MRRDays360: MRRPerSignature;
+  MRRAnnually: MRRPerSignature;
+  MRRBiennial: MRRPerSignature;
+  MRR: string;
+}
+
 export interface IMetrics {
-  general: {
-    MRRMonthly: MRRPerSignature;
-    MRRDays360: MRRPerSignature;
-    MRRAnnually: MRRPerSignature;
-    MRRBiennial: MRRPerSignature;
-    MRR: string;
-  };
+  general: IMRRtypes
   perYear: {
-    [year: string]: {
-      MRRMonthly: MRRPerSignature;
-      MRRDays360: MRRPerSignature;
-      MRRAnnually: MRRPerSignature;
-      MRRBiennial: MRRPerSignature;
-      MRR: string;
-    };
+    [year: string]: IMRRtypes
   };
 }

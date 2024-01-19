@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IExcelModel } from '../mapper/excel.mapper';
-import { IMetrics, Itypesignature, MRRPerSignature } from '../interfaces/signature.service.protocol';
+import { IMRRtypes, IMetrics, Itypesignature, MRRPerSignature } from '../interfaces/signature.service.protocol';
 import { Years } from '../interfaces/year.service.protocol';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class MetricsSignatureService {
     };
   }
 
-  private calculateGeneralMRR = (json: IExcelModel[]) => {
+  private calculateGeneralMRR (json: IExcelModel[]) {
     const signatureValues = this.getSignatureValues(this.separatePerTypeOfSignature(json));
     const { MRRMonthly, MRRDays360, MRRAnnually, MRRBiennial } = signatureValues;
     const MRR = this.monthlyRecurringRevenue(
@@ -35,7 +35,7 @@ export class MetricsSignatureService {
     };
   };
 
-  private calculateYearlyMRR (year: IExcelModel[]) {
+  private calculateYearlyMRR (year: IExcelModel[]): IMRRtypes {
     const signatureValues = this.getSignatureValues(this.separatePerTypeOfSignature(year));
     const { MRRMonthly, MRRDays360, MRRAnnually, MRRBiennial } = signatureValues;
     const MRR = this.monthlyRecurringRevenue(
@@ -76,7 +76,7 @@ export class MetricsSignatureService {
     return value.toFixed(2);
   }
 
-  private MRRforSignature(array: IExcelModel[], divisor: number): MRRPerSignature {
+  private MRRforSignature (array: IExcelModel[], divisor: number): MRRPerSignature {
     const value = (array
       .reduce((acumulador, objeto) => acumulador + (Number(objeto.value) || 0),0,) / divisor)
       .toFixed(2);
@@ -86,7 +86,7 @@ export class MetricsSignatureService {
     };
   }
 
-  private separatePerTypeOfSignature(json: IExcelModel[]): Itypesignature {
+  private separatePerTypeOfSignature (json: IExcelModel[]): Itypesignature {
     const separate: Itypesignature = {
       monthly: [],
       days360: [],
