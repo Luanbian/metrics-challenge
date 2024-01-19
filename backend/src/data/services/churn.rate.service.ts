@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { IExcelModel } from "../mapper/excel.mapper";
+import { Years } from "../interfaces/year.service.protocol";
 
 export interface SignatureStatus {
   actives: IExcelModel[]
@@ -11,17 +12,22 @@ export interface SignatureStatus {
 
 @Injectable()
 export class ChurnRateService {
-  public async metrics (json: IExcelModel[]) {
-    const general = this.calculateGenerealChurnRate(json);
+  public async metrics (json: IExcelModel[], years: Years) {
+    const perYear = {};
+    for(const year in years) {
+      perYear[year] = this.calculateChurnRate(years[year]);
+    }
+    const general = this.calculateChurnRate(json);
     return {
-      general
+      general,
+      perYear
     }
   }
 
-  private calculateGenerealChurnRate (json: IExcelModel[]) {
-    const separate = this.separateActivesAndCanceleds(json);
+  private calculateChurnRate (data: IExcelModel[]) {
+    const separate = this.separateActivesAndCanceleds(data);
     const canceleds = separate.canceleds.length + separate.canceledsTrial.length;
-    const churnRate = ((canceleds / json.length) * 100).toFixed(2);
+    const churnRate = ((canceleds / data.length) * 100).toFixed(2);
     return `${churnRate}%`;
   }
 
