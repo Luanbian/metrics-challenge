@@ -1,18 +1,16 @@
 <template>
   <div>
-
     <div class="row">
       <div class="col-12">
         <card type="chart">
           <template slot="header">
             <div class="row">
-              <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
-                <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
-                <h2 class="card-title">{{$t('dashboard.performance')}}</h2>
+              <div class="col-sm-6" :class="'text-left'">
+                <h2 class="card-title"><i class="tim-icons icon-alert-circle-exc text-danger"></i> Churn Rate mensal</h2>
               </div>
               <div class="col-sm-6">
                 <div class="btn-group btn-group-toggle"
-                     :class="isRTL ? 'float-left' : 'float-right'"
+                     :class="'float-right'"
                      data-toggle="buttons">
                   <label v-for="(option, index) in bigLineChartCategories"
                          :key="option"
@@ -41,13 +39,10 @@
           </div>
         </card>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-4" :class="{'text-right': isRTL}">
+      <div class="col-lg-6 col-md-12" :class="'text-left'">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
-            <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary "></i> 763,215</h3>
+            <h3 class="card-title"><i class="tim-icons icon-calendar-60 text-primary "></i> MRR por assinatura</h3>
           </template>
           <div class="chart-area">
             <line-chart style="height: 100%"
@@ -60,11 +55,10 @@
           </div>
         </card>
       </div>
-      <div class="col-lg-4" :class="{'text-right': isRTL}">
+      <div class="col-lg-6 col-md-12" :class="'text-left'">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">{{$t('dashboard.dailySales')}}</h5>
-            <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info "></i> 3,500€</h3>
+            <h3 class="card-title"><i class="tim-icons icon-chart-bar-32 text-info "></i>MRR geral</h3>
           </template>
           <div class="chart-area">
             <bar-chart style="height: 100%"
@@ -76,19 +70,46 @@
           </div>
         </card>
       </div>
-      <div class="col-lg-4" :class="{'text-right': isRTL}">
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-12" :class="'text-left'">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">{{$t('dashboard.completedTasks')}}</h5>
-            <h3 class="card-title"><i class="tim-icons icon-send text-success "></i> 12,100K</h3>
+            <h3 class="card-title"><i class="tim-icons icon-single-02 text-success "></i> Número de clientes por assinatura </h3>
           </template>
           <div class="chart-area">
             <line-chart style="height: 100%"
-                        chart-id="green-line-chart"
-                        :chart-data="greenLineChart.chartData"
-                        :gradient-stops="greenLineChart.gradientStops"
-                        :extra-options="greenLineChart.extraOptions">
+                        chart-id="purple-line-chart"
+                        :chart-data="purpleLineChart.chartData"
+                        :gradient-colors="purpleLineChart.gradientColors"
+                        :gradient-stops="purpleLineChart.gradientStops"
+                        :extra-options="purpleLineChart.extraOptions">
             </line-chart>
+          </div>
+        </card>
+      </div>
+      <div class="col-lg-6 col-md-12" :class="'text-left'">
+        <card type="chart">
+          <template slot="header">
+            <h3 class="card-title"><i class="tim-icons icon-coins text-info "></i>Número de clientes atual</h3>
+          </template>
+          <div class="chart-area">
+            <bar-chart style="height: 100%"
+                       chart-id="blue-bar-chart"
+                       :chart-data="blueBarChart.chartData"
+                       :gradient-stops="blueBarChart.gradientStops"
+                       :extra-options="blueBarChart.extraOptions">
+            </bar-chart>
+          </div>
+        </card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <card class="card" :header-classes="{'text-right': isRTL}">
+          <h4 slot="header" class="card-title">Informações gerais</h4>
+          <div class="table-responsive">
+            <user-table></user-table>
           </div>
         </card>
       </div>
@@ -98,13 +119,15 @@
 <script>
   import LineChart from '@/components/Charts/LineChart';
   import BarChart from '@/components/Charts/BarChart';
-  import * as chartConfigs from '@/components/Charts/config';
+  import * as chartConfigs from '@/components/Charts/config'
+  import UserTable from './Dashboard/UserTable';
   import config from '@/config';
 
   export default {
     components: {
       LineChart,
-      BarChart
+      BarChart,
+      UserTable
     },
     data() {
       return {
@@ -117,7 +140,7 @@
           activeIndex: 0,
           chartData: {
             datasets: [{ }],
-            labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+            labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
           },
           extraOptions: chartConfigs.purpleChartOptions,
           gradientColors: config.colors.primaryGradient,
@@ -127,7 +150,7 @@
         purpleLineChart: {
           extraOptions: chartConfigs.purpleChartOptions,
           chartData: {
-            labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+            labels: ['30', '360', '365', '730', 'total'],
             datasets: [{
               label: "Data",
               fill: true,
@@ -148,34 +171,10 @@
           gradientColors: config.colors.primaryGradient,
           gradientStops: [1, 0.2, 0],
         },
-        greenLineChart: {
-          extraOptions: chartConfigs.greenChartOptions,
-          chartData: {
-            labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
-            datasets: [{
-              label: "My First dataset",
-              fill: true,
-              borderColor: config.colors.danger,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              pointBackgroundColor: config.colors.danger,
-              pointBorderColor: 'rgba(255,255,255,0)',
-              pointHoverBackgroundColor: config.colors.danger,
-              pointBorderWidth: 20,
-              pointHoverRadius: 4,
-              pointHoverBorderWidth: 15,
-              pointRadius: 4,
-              data: [90, 27, 60, 12, 80],
-            }]
-          },
-          gradientColors: ['rgba(66,134,121,0.15)', 'rgba(66,134,121,0.0)', 'rgba(66,134,121,0)'],
-          gradientStops: [1, 0.4, 0],
-        },
         blueBarChart: {
           extraOptions: chartConfigs.barChartOptions,
           chartData: {
-            labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
+            labels: ['30', '360', '365', '730'],
             datasets: [{
               label: "Countries",
               fill: true,
@@ -220,7 +219,7 @@
             pointRadius: 4,
             data: this.bigLineChart.allData[index]
           }],
-          labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+          labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
         }
         this.$refs.bigChart.updateGradients(chartData);
         this.bigLineChart.chartData = chartData;
