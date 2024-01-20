@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { IExcelModel } from "../mapper/excel.mapper";
 import { Years } from "../interfaces/year.service.protocol";
+import { Months } from "../interfaces/month.service.protocol";
 
 export interface SignatureStatus {
   actives: IExcelModel[]
@@ -12,28 +13,46 @@ export interface SignatureStatus {
 
 @Injectable()
 export class ChurnRateService {
-  public async metrics (json: IExcelModel[], years: Years) {
+  public async metrics (json: IExcelModel[], years: Years, months: Months) {
     const perYear = {};
     for(const year in years) {
-      perYear[year] = this.calculateChurnRate(years[year]);
+      perYear[year] = {
+        yearlyChurnRate: await this.calculateChurnRate(years[year]),
+        monthlyChurnRate: await this.calculateMonthlyChurnRate(months[year], years[year]),
+      };
     }
-    const general = this.calculateChurnRate(json);
+    const general = await this.calculateChurnRate(json);
     return {
       general,
       perYear
     }
   }
 
-  private calculateChurnRate (data: IExcelModel[]) {
-    const separate = this.separateActivesAndCanceleds(data);
-    const canceleds = separate.canceleds.length + separate.canceledsTrial.length;
+  private async calculateMonthlyChurnRate(monthData: Months, years: IExcelModel[]) {
+    const perMonth = {};
+
+    for (const month in monthData) {
+      const separate = await this.separateActivesAndCanceleds(monthData[month]);
+      const canceleds = separate.canceleds.length + separate.canceledsTrial.length + separate.overDues.length;
+      const totalCustomers = years.length - 1;
+      const calculate = ((canceleds / totalCustomers) * 100)
+      const churnRate = Number.isNaN(calculate) ? 0 : calculate;
+      const result = `${churnRate.toFixed(2)}%`;
+      perMonth[month] = result;
+    }
+    return perMonth;
+  }
+
+  private async calculateChurnRate (data: IExcelModel[]) {
+    const separate = await this.separateActivesAndCanceleds(data);
+    const canceleds = separate.canceleds.length + separate.canceledsTrial.length + separate.overDues.length;
     const totalCustomers = data.length - 1;
     const calculate = ((canceleds / totalCustomers) * 100)
     const churnRate = Number.isNaN(calculate) ? 0 : calculate;
     return `${churnRate.toFixed(2)}%`;
   }
 
-  private separateActivesAndCanceleds (json: IExcelModel[]) {
+  private async separateActivesAndCanceleds (json: IExcelModel[]) {
     const separate: SignatureStatus = {
       actives: [],
       canceleds: [],
@@ -41,7 +60,7 @@ export class ChurnRateService {
       overDues: [],
       upgrades: []
     }
-    for (const item of json) {
+    for await (const item of json) {
       const status = item.status.trim();
 
       switch (status) {

@@ -8,7 +8,20 @@ import { IExcelModel } from "../mapper/excel.mapper";
 @Injectable()
 export class MetricsMonthService {
   public async metrics(years:Years) {
-    const separatePerMonth: Record<string, Months> = {};
+    const separatePerMonth: Months = {
+      jan: [],
+      fev: [],
+      mar: [],
+      abr: [],
+      mai: [],
+      jun: [],
+      jul: [],
+      ago: [],
+      set: [],
+      out: [],
+      nov: [],
+      dez: [],
+    };
     
     for (const [year, data] of Object.entries(years)) {
       separatePerMonth[year] = this.separatePerMonth(data);

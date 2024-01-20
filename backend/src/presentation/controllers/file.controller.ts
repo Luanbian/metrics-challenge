@@ -59,9 +59,9 @@ export class FileController {
 
       const yearsChurn = await this.year.metrics(json, 'churn');
       const monthChurn = await this.month.metrics(yearsChurn);
-      const churn = await this.churn.metrics(json, yearsChurn);
+      const churn = await this.churn.metrics(json, yearsChurn, monthChurn);
 
-      const body = {monthChurn}
+      const body = {MRR, churn}
       return ok(body);
     } catch (error) {
       console.error(error);
