@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { IExcelModel } from '../mapper/excel.mapper';
 import { IMRRtypes, IMetrics, Itypesignature, MRRPerSignature } from '../interfaces/signature.service.protocol';
-import { Years } from '../interfaces/year.service.protocol';
+import { MetricsYearService } from './metrics.year.service';
 
 @Injectable()
 export class MetricsSignatureService {
-  public async metrics(json: IExcelModel[], years: Years): Promise<IMetrics> {
+  constructor (private readonly years: MetricsYearService) {}
+
+  public async metrics(json: IExcelModel[]): Promise<IMetrics> {
     const perYear = {};
+    const years = await this.years.metrics(json, 'mrr');
     for (const year in years) {
       perYear[year] = this.calculateMRR(years[year]);
     }

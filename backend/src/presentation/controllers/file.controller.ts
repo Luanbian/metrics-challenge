@@ -7,9 +7,7 @@ import { badRequest, ok, serverError } from '../helpers/http.helper';
 import { MetricsSignatureService } from 'src/data/services/metrics.signature.service';
 import { xlsxToJson } from 'src/utils/xlsx.to.json';
 import { csvToJson } from 'src/utils/csv.to.json';
-import { MetricsYearService } from 'src/data/services/metrics.year.service';
 import { ChurnRateService } from 'src/data/services/churn.rate.service';
-import { MetricsMonthService } from 'src/data/services/metrics.month.service';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
@@ -17,9 +15,7 @@ const allowedFileTypes = ['.xlsx', '.csv'];
 export class FileController {
   constructor (
     private readonly mrr: MetricsSignatureService,
-    private readonly year: MetricsYearService,
     private readonly churn: ChurnRateService,
-    private readonly month: MetricsMonthService
   ) {}
 
   @Post()
@@ -54,14 +50,10 @@ export class FileController {
       const extension = extname(file.originalname).toLowerCase();
       const json = extension === '.xlsx' ? xlsxToJson(file.path) : await csvToJson(file.path);
 
-      const yearsMRR = await this.year.metrics(json, 'mrr');
-      const MRR = await this.mrr.metrics(json, yearsMRR);
+      const MRR = await this.mrr.metrics(json);
+      const churn = await this.churn.metrics(json);
 
-      const yearsChurn = await this.year.metrics(json, 'churn');
-      const monthChurn = await this.month.metrics(yearsChurn);
-      const churn = await this.churn.metrics(json, yearsChurn, monthChurn);
-
-      const body = {MRR, churn}
+      const body = { MRR, churn }
       return ok(body);
     } catch (error) {
       console.error(error);

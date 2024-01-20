@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { IExcelModel } from "../mapper/excel.mapper";
-import { Years } from "../interfaces/year.service.protocol";
 import { Months } from "../interfaces/month.service.protocol";
+import { MetricsYearService } from "./metrics.year.service";
+import { MetricsMonthService } from "./metrics.month.service";
 
 export interface SignatureStatus {
   actives: IExcelModel[]
@@ -13,14 +14,23 @@ export interface SignatureStatus {
 
 @Injectable()
 export class ChurnRateService {
-  public async metrics (json: IExcelModel[], years: Years, months: Months) {
+  constructor (
+    private readonly years: MetricsYearService,
+    private readonly month: MetricsMonthService
+  ) {}
+
+  public async metrics (json: IExcelModel[]) {
     const perYear = {};
+    const years = await this.years.metrics(json, 'churn');
+    const months = await this.month.metrics(years);
+
     for(const year in years) {
       perYear[year] = {
         yearlyChurnRate: await this.calculateChurnRate(years[year]),
         monthlyChurnRate: await this.calculateMonthlyChurnRate(months[year], years[year]),
       };
     }
+    
     const general = await this.calculateChurnRate(json);
     return {
       general,
