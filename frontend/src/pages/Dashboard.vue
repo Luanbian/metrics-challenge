@@ -42,11 +42,33 @@
       <div class="col-lg-6 col-md-12" :class="'text-left'">
         <card type="chart">
           <template slot="header">
-            <h3 class="card-title"><i class="tim-icons icon-calendar-60 text-primary "></i> MRR por assinatura</h3>
+            <div class="row">
+              <div class="col-sm-6" :class="'text-left'">
+                <h3 class="card-title"><i class="tim-icons icon-calendar-60 text-primary "></i> MRR por assinatura</h3>
+              </div>
+              <div class="col-sm-6">
+                  <div class="btn-group btn-group-toggle"
+                       :class="'float-right'"
+                       data-toggle="buttons">
+                    <label v-for="(option, index) in bigLineChartCategories"
+                           :key="option"
+                           class="btn btn-sm btn-primary btn-simple"
+                           :class="{active: mrrPerSignature.activeIndex === index}"
+                           :id="index">
+                      <input type="radio"
+                             @click="initMrrPerSignature(index)"
+                             name="options" autocomplete="off"
+                             :checked="mrrPerSignature.activeIndex === index">
+                      {{option}}
+                    </label>
+                  </div>
+                </div>
+            </div>
           </template>
           <div class="chart-area">
             <line-chart style="height: 100%"
                         chart-id="purple-line-chart"
+                        ref="mrrPerSignature"
                         :chart-data="mrrPerSignature.chartData"
                         :gradient-colors="mrrPerSignature.gradientColors"
                         :gradient-stops="mrrPerSignature.gradientStops"
@@ -150,28 +172,20 @@
           categories: []
         },
         mrrPerSignature: {
-          extraOptions: chartConfigs.purpleChartOptions,
+          allData: [
+            [30, 80, 20, 10],
+            [30, 10, 5, 20],
+            [30, 80, 20, 10]
+          ],
+          activeIndex: 0,
           chartData: {
-            labels: ['30', '360', '365', '730', 'total'],
-            datasets: [{
-              label: "Data",
-              fill: true,
-              borderColor: config.colors.purple,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              pointBackgroundColor: config.colors.purple,
-              pointBorderColor: 'rgba(255,255,255,0)',
-              pointHoverBackgroundColor: config.colors.purple,
-              pointBorderWidth: 20,
-              pointHoverRadius: 4,
-              pointHoverBorderWidth: 15,
-              pointRadius: 4,
-              data: [80, 100, 70, 80, 120, 80],
-            }]
+            datasets: [{ }],
+            labels: ['30', '360', '365', '730', 'total']
           },
+          extraOptions: chartConfigs.purpleChartOptions,
           gradientColors: config.colors.purpleGradient,
           gradientStops: [1, 0.2, 0],
+          categories: []
         },
         clientsPerSignature: {
           extraOptions: chartConfigs.purpleChartOptions,
@@ -293,6 +307,29 @@
         this.$refs.bigChart.updateGradients(chartData);
         this.bigLineChart.chartData = chartData;
         this.bigLineChart.activeIndex = index;
+      },
+      initMrrPerSignature(index) {
+        let chartData = {
+          datasets: [{
+              fill: true,
+              borderColor: config.colors.purple,
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              pointBackgroundColor: config.colors.purple,
+              pointBorderColor: 'rgba(255,255,255,0)',
+              pointHoverBackgroundColor: config.colors.purple,
+              pointBorderWidth: 20,
+              pointHoverRadius: 4,
+              pointHoverBorderWidth: 15,
+              pointRadius: 4,
+              data: this.mrrPerSignature.allData[index]
+          }],
+          labels: ['30', '360', '365', '730'],
+        }
+        this.$refs.mrrPerSignature.updateGradients(chartData);
+        this.mrrPerSignature.chartData = chartData;
+        this.mrrPerSignature.activeIndex = index;
       }
     },
     mounted() {
