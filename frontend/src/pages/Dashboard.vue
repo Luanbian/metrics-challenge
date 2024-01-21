@@ -310,7 +310,7 @@
           const years = Object.keys(this.apiResponse.MRR.perYear);
 
           this.mrrPerSignature.allData = [];
-          const orderedSignature = ["MRRMonthly", "MRRDays360", "MRRAnnually", "MRRBiennial"];
+          const orderedSignature = ["MRRMonthly", "MRRDays360", "MRRAnnually", "MRRBiennial", "MRR"];
 
           const all = [];
           years.forEach((year) => {
@@ -344,7 +344,7 @@
               pointRadius: 4,
               data: this.mrrPerSignature.allData[index]
           }],
-          labels: ['30', '360', '365', '730'],
+          labels: ['30', '360', '365', '730', 'total'],
         }
         this.$refs.mrrPerSignature.updateGradients(chartData);
         this.mrrPerSignature.chartData = chartData;
