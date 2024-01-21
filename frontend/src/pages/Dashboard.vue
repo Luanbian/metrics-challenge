@@ -224,18 +224,12 @@
           gradientStops: [1, 0.4, 0],
         },
         mrrGeneral: {
-          extraOptions: chartConfigs.barChartOptions,
+          allData: [],
           chartData: {
             labels: ['30', '360', '365', '730'],
-            datasets: [{
-              fill: true,
-              borderColor: config.colors.info,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              data: [53, 20, 10, 80, 100, 45],
-            }]
+            datasets: [{ }]
           },
+          extraOptions: chartConfigs.barChartOptions,
           gradientColors: config.colors.primaryGradient,
           gradientStops: [1, 0.4, 0],
         }
@@ -244,6 +238,7 @@
     created() {
       this.updateChartData();
       this.updateMrrPerSignatureChart();
+      this.defineGeneralMrr();
     },
     computed: {
       apiResponse() {
@@ -349,6 +344,29 @@
         this.$refs.mrrPerSignature.updateGradients(chartData);
         this.mrrPerSignature.chartData = chartData;
         this.mrrPerSignature.activeIndex = index;
+      },
+      defineGeneralMrr () {
+        if (this.apiResponse && this.apiResponse.MRR && this.apiResponse.MRR.general) {
+          const orderedSignature = ["MRRMonthly", "MRRDays360", "MRRAnnually", "MRRBiennial", "MRR"];
+          const all = orderedSignature.map((signature) => {
+            return parseFloat(this.apiResponse.MRR.general[signature].value);
+          })
+          this.mrrGeneral.allData = all;
+          let chartData = {
+          datasets: [{
+            fill: true,
+            borderColor: config.colors.info,
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            data: this.mrrGeneral.allData,
+          }],
+          labels: ['30', '360', '365', '730', 'total'],
+        }
+        this.mrrGeneral.chartData = chartData;
+        } else {
+          this.mrrGeneral.allData = [];
+        }
       }
     },
     mounted() {
