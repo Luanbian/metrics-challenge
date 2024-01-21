@@ -52,13 +52,16 @@ export class MetricsSignatureService {
     MRRDays360: MRRPerSignature,
     MRRAnnually: MRRPerSignature,
     MRRBiennial: MRRPerSignature,
-  ): string {
+  ): MRRPerSignature {
     const value =
       Number(MRRMonthly.value) +
       Number(MRRDays360.value) +
       Number(MRRAnnually.value) +
       Number(MRRBiennial.value);
-    return value.toFixed(2);
+    return {
+      numberOfClients: 0,
+      value: value.toFixed(2)
+    }
   }
 
   private MRRforSignature (array: IExcelModel[], divisor: number): MRRPerSignature {

@@ -172,11 +172,7 @@
           categories: []
         },
         mrrPerSignature: {
-          allData: [
-            [30, 80, 20, 10],
-            [30, 10, 5, 20],
-            [30, 80, 20, 10]
-          ],
+          allData: [],
           activeIndex: 0,
           chartData: {
             datasets: [{ }],
@@ -247,6 +243,7 @@
     },
     created() {
       this.updateChartData();
+      this.updateMrrPerSignatureChart();
     },
     computed: {
       apiResponse() {
@@ -308,7 +305,30 @@
         this.bigLineChart.chartData = chartData;
         this.bigLineChart.activeIndex = index;
       },
+      updateMrrPerSignatureChart () {
+        if (this.apiResponse && this.apiResponse.MRR && this.apiResponse.MRR.perYear) {
+          const years = Object.keys(this.apiResponse.MRR.perYear);
+
+          this.mrrPerSignature.allData = [];
+          const orderedSignature = ["MRRMonthly", "MRRDays360", "MRRAnnually", "MRRBiennial", "MRR"];
+
+          const all = [];
+          years.forEach((year) => {
+            const organized = orderedSignature.map((signature) => {
+              return parseFloat(this.apiResponse.MRR.perYear[year][signature].value);
+            })
+            all.push(organized);
+          });
+          console.log(all);
+          this.mrrPerSignature.allData = all;
+        } else {
+          this.mrrPerSignature.allData = [];
+          this.mrrPerSignature.chartData.datasets = [{}];
+          this.mrrPerSignature.categories = [];
+        }
+      },
       initMrrPerSignature(index) {
+        this.updateMrrPerSignatureChart();
         let chartData = {
           datasets: [{
               fill: true,
@@ -325,7 +345,7 @@
               pointRadius: 4,
               data: this.mrrPerSignature.allData[index]
           }],
-          labels: ['30', '360', '365', '730'],
+          labels: ['30', '360', '365', '730', 'total'],
         }
         this.$refs.mrrPerSignature.updateGradients(chartData);
         this.mrrPerSignature.chartData = chartData;

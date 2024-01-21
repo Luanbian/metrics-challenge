@@ -17,7 +17,7 @@ export interface IMRRtypes {
   MRRDays360: MRRPerSignature;
   MRRAnnually: MRRPerSignature;
   MRRBiennial: MRRPerSignature;
-  MRR: string;
+  MRR: MRRPerSignature;
 }
 
 export interface IMetrics {
