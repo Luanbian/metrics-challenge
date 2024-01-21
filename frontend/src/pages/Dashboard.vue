@@ -138,11 +138,7 @@
     data() {
       return {
         bigLineChart: {
-          allData: [
-            [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-            [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-            [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
-          ],
+          allData: [],
           activeIndex: 0,
           chartData: {
             datasets: [{ }],
@@ -235,6 +231,9 @@
         }
       }
     },
+    created() {
+      this.updateChartData();
+    },
     computed: {
       apiResponse() {
         return store.state.response;
@@ -246,11 +245,35 @@
         return this.$rtl.isRTL;
       },
       bigLineChartCategories() {
-        return this.$t('dashboard.chartCategories');
+        return Object.keys(this.apiResponse.churn.perYear);
       }
     },
     methods: {
+      updateChartData() {
+        if (this.apiResponse && this.apiResponse.churn && this.apiResponse.churn.perYear) {
+          const years = Object.keys(this.apiResponse.churn.perYear);
+
+          this.bigLineChart.allData = [];
+          const orderedMonths = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+
+          const all = [];
+          years.forEach((year) => {
+            const organized = orderedMonths.map((month) => {
+              return parseFloat(this.apiResponse.churn.perYear[year].monthlyChurnRate[month]);
+            })
+            all.push(organized);
+          });
+          this.bigLineChart.allData = all;
+          this.bigLineChart.chartData.datasets = new Array(years.length).fill({});
+          this.bigLineChart.categories = years;
+        } else {
+          this.bigLineChart.allData = [];
+          this.bigLineChart.chartData.datasets = [{}];
+          this.bigLineChart.categories = [];
+        }
+      },
       initBigChart(index) {
+        this.updateChartData();
         let chartData = {
           datasets: [{
             fill: true,
