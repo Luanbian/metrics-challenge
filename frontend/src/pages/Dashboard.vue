@@ -47,10 +47,10 @@
           <div class="chart-area">
             <line-chart style="height: 100%"
                         chart-id="purple-line-chart"
-                        :chart-data="purpleLineChart.chartData"
-                        :gradient-colors="purpleLineChart.gradientColors"
-                        :gradient-stops="purpleLineChart.gradientStops"
-                        :extra-options="purpleLineChart.extraOptions">
+                        :chart-data="mrrPerSignature.chartData"
+                        :gradient-colors="mrrPerSignature.gradientColors"
+                        :gradient-stops="mrrPerSignature.gradientStops"
+                        :extra-options="mrrPerSignature.extraOptions">
             </line-chart>
           </div>
         </card>
@@ -63,9 +63,9 @@
           <div class="chart-area">
             <bar-chart style="height: 100%"
                        chart-id="blue-bar-chart"
-                       :chart-data="blueBarChart.chartData"
-                       :gradient-stops="blueBarChart.gradientStops"
-                       :extra-options="blueBarChart.extraOptions">
+                       :chart-data="mrrGeneral.chartData"
+                       :gradient-stops="mrrGeneral.gradientStops"
+                       :extra-options="mrrGeneral.extraOptions">
             </bar-chart>
           </div>
         </card>
@@ -80,10 +80,10 @@
           <div class="chart-area">
             <line-chart style="height: 100%"
                         chart-id="purple-line-chart"
-                        :chart-data="purpleLineChart.chartData"
-                        :gradient-colors="purpleLineChart.gradientColors"
-                        :gradient-stops="purpleLineChart.gradientStops"
-                        :extra-options="purpleLineChart.extraOptions">
+                        :chart-data="clientsPerSignature.chartData"
+                        :gradient-colors="clientsPerSignature.gradientColors"
+                        :gradient-stops="clientsPerSignature.gradientStops"
+                        :extra-options="clientsPerSignature.extraOptions">
             </line-chart>
           </div>
         </card>
@@ -91,14 +91,15 @@
       <div class="col-lg-6 col-md-12" :class="'text-left'">
         <card type="chart">
           <template slot="header">
-            <h3 class="card-title"><i class="tim-icons icon-coins text-info "></i>Número de clientes atual</h3>
+            <h3 class="card-title"><i class="tim-icons icon-coins text-warning "></i>Número de clientes atual por assinatura</h3>
           </template>
           <div class="chart-area">
             <bar-chart style="height: 100%"
                        chart-id="blue-bar-chart"
-                       :chart-data="blueBarChart.chartData"
-                       :gradient-stops="blueBarChart.gradientStops"
-                       :extra-options="blueBarChart.extraOptions">
+                       :chart-data="currencyClien.chartData"
+                       :gradient-colors="currencyClien.gradientColors"
+                       :gradient-stops="currencyClien.gradientStops"
+                       :extra-options="currencyClien.extraOptions">
             </bar-chart>
           </div>
         </card>
@@ -143,11 +144,35 @@
             labels: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
           },
           extraOptions: chartConfigs.purpleChartOptions,
-          gradientColors: config.colors.primaryGradient,
+          gradientColors: config.colors.dangerGradient,
           gradientStops: [1, 0.4, 0],
           categories: []
         },
-        purpleLineChart: {
+        mrrPerSignature: {
+          extraOptions: chartConfigs.purpleChartOptions,
+          chartData: {
+            labels: ['30', '360', '365', '730', 'total'],
+            datasets: [{
+              label: "Data",
+              fill: true,
+              borderColor: config.colors.purple,
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              pointBackgroundColor: config.colors.purple,
+              pointBorderColor: 'rgba(255,255,255,0)',
+              pointHoverBackgroundColor: config.colors.purple,
+              pointBorderWidth: 20,
+              pointHoverRadius: 4,
+              pointHoverBorderWidth: 15,
+              pointRadius: 4,
+              data: [80, 100, 70, 80, 120, 80],
+            }]
+          },
+          gradientColors: config.colors.purpleGradient,
+          gradientStops: [1, 0.2, 0],
+        },
+        clientsPerSignature: {
           extraOptions: chartConfigs.purpleChartOptions,
           chartData: {
             labels: ['30', '360', '365', '730', 'total'],
@@ -171,12 +196,27 @@
           gradientColors: config.colors.primaryGradient,
           gradientStops: [1, 0.2, 0],
         },
-        blueBarChart: {
+        currencyClien: {
           extraOptions: chartConfigs.barChartOptions,
           chartData: {
             labels: ['30', '360', '365', '730'],
             datasets: [{
-              label: "Countries",
+              fill: true,
+              borderColor: config.colors.warning,
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              data: [53, 20, 10, 80, 100, 45],
+            }]
+          },
+          gradientColors: config.colors.warningGradient,
+          gradientStops: [1, 0.4, 0],
+        },
+        mrrGeneral: {
+          extraOptions: chartConfigs.barChartOptions,
+          chartData: {
+            labels: ['30', '360', '365', '730'],
+            datasets: [{
               fill: true,
               borderColor: config.colors.info,
               borderWidth: 2,
@@ -206,13 +246,13 @@
         let chartData = {
           datasets: [{
             fill: true,
-            borderColor: config.colors.primary,
+            borderColor: config.colors.danger,
             borderWidth: 2,
             borderDash: [],
             borderDashOffset: 0.0,
-            pointBackgroundColor: config.colors.primary,
+            pointBackgroundColor: config.colors.danger,
             pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: config.colors.primary,
+            pointHoverBackgroundColor: config.colors.danger,
             pointBorderWidth: 20,
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,

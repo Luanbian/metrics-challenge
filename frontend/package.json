@@ -1,9 +1,9 @@
 {
-  "name": "vue-black-dashboard",
+  "name": "challenge-copybase",
   "version": "1.1.2",
-  "private": true,
-  "description": "A sample admin dashboard based on black dashboard UI template",
-  "author": "cristian.jora <joracristi@gmail.com>",
+  "private": false,
+  "description": "Dashboard with Vue for Copybase",
+  "author": "Luan",
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
@@ -33,10 +33,5 @@
     "sass-loader": "10.2.0",
     "vue-cli-plugin-i18n": "2.3.1",
     "vue-template-compiler": "2.7.14"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 11"
-  ]
+  }
 }
