@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import store from '../store';
+
 export default {
   data() {
     return {
@@ -57,7 +59,7 @@ export default {
             'Content-Type': 'multipart/form-data',
           }
         });
-        console.log('Api response: ', response.data);
+        store.commit('setResponse', response.data.body);
       } catch (error) {
         console.error('Api error: ', error);
       }

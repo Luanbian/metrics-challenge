@@ -115,6 +115,10 @@
         </card>
       </div>
     </div>
+    <div>
+      <p>Api response</p>
+      <pre>{{ JSON.stringify(apiResponse) }}</pre>
+    </div>
   </div>
 </template>
 <script>
@@ -123,6 +127,7 @@
   import * as chartConfigs from '@/components/Charts/config'
   import UserTable from './Dashboard/UserTable';
   import config from '@/config';
+  import store from '../store';
 
   export default {
     components: {
@@ -231,6 +236,9 @@
       }
     },
     computed: {
+      apiResponse() {
+        return store.state.response;
+      },
       enableRTL() {
         return this.$route.query.enableRTL;
       },
