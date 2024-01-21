@@ -264,8 +264,6 @@
             all.push(organized);
           });
           this.bigLineChart.allData = all;
-          this.bigLineChart.chartData.datasets = new Array(years.length).fill({});
-          this.bigLineChart.categories = years;
         } else {
           this.bigLineChart.allData = [];
           this.bigLineChart.chartData.datasets = [{}];
