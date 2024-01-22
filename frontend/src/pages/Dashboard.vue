@@ -136,10 +136,10 @@
           <div class="chart-area">
             <bar-chart style="height: 100%"
                        chart-id="blue-bar-chart"
-                       :chart-data="currencyClien.chartData"
-                       :gradient-colors="currencyClien.gradientColors"
-                       :gradient-stops="currencyClien.gradientStops"
-                       :extra-options="currencyClien.extraOptions">
+                       :chart-data="currencyClients.chartData"
+                       :gradient-colors="currencyClients.gradientColors"
+                       :gradient-stops="currencyClients.gradientStops"
+                       :extra-options="currencyClients.extraOptions">
             </bar-chart>
           </div>
         </card>
@@ -213,19 +213,13 @@
           gradientStops: [1, 0.4, 0],
           categories: []
         },
-        currencyClien: {
-          extraOptions: chartConfigs.barChartOptions,
+        currencyClients: {
+          allData: [],
           chartData: {
             labels: ['30', '360', '365', '730'],
-            datasets: [{
-              fill: true,
-              borderColor: config.colors.warning,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              data: [53, 20, 10, 80, 100, 45],
-            }]
+            datasets: [{ }]
           },
+          extraOptions: chartConfigs.barChartOptions,
           gradientColors: config.colors.warningGradient,
           gradientStops: [1, 0.4, 0],
         },
@@ -246,6 +240,7 @@
       this.updateClientsPerSignature();
       this.updateMrrPerSignatureChart();
       this.defineGeneralMrr();
+      this.defineCurrencyClients();
     },
     computed: {
       apiResponse() {
@@ -360,17 +355,17 @@
           })
           this.mrrGeneral.allData = all;
           let chartData = {
-          datasets: [{
-            fill: true,
-            borderColor: config.colors.info,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            data: this.mrrGeneral.allData,
-          }],
-          labels: ['30', '360', '365', '730', 'total'],
-        }
-        this.mrrGeneral.chartData = chartData;
+            datasets: [{
+              fill: true,
+              borderColor: config.colors.info,
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              data: this.mrrGeneral.allData,
+            }],
+            labels: ['30', '360', '365', '730', 'total'],
+          }
+          this.mrrGeneral.chartData = chartData;
         } else {
           this.mrrGeneral.allData = [];
         }
@@ -389,7 +384,6 @@
             })
             all.push(organized);
           });
-          console.log(all);
           this.clientsPerSignature.allData = all;
         } else {
           this.clientsPerSignature.allData = [];
@@ -420,6 +414,29 @@
         this.$refs.clientsPerSignature.updateGradients(chartData);
         this.clientsPerSignature.chartData = chartData;
         this.clientsPerSignature.activeIndex = index;
+      },
+      defineCurrencyClients() {
+        if (this.apiResponse && this.apiResponse.MRR && this.apiResponse.MRR.general) {
+          const orderedSignature = ["MRRMonthly", "MRRDays360", "MRRAnnually", "MRRBiennial", "MRR"];
+          const all = orderedSignature.map((signature) => {
+            return parseFloat(this.apiResponse.MRR.general[signature].numberOfClients);
+          })
+          this.currencyClients.allData = all;
+          let chartData = {
+            datasets: [{
+              fill: true,
+              borderColor: config.colors.warning,
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              data: this.currencyClients.allData,
+            }],
+            labels: ['30', '360', '365', '730'],
+          }
+          this.currencyClients.chartData = chartData;
+        } else {
+          this.currencyClients.allData = [];
+        }
       }
     },
     mounted() {
