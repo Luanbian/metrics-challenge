@@ -47,10 +47,8 @@
                 <h3 class="card-title"><i class="tim-icons icon-calendar-60 text-primary "></i> MRR por assinatura</h3>
               </div>
               <div class="col-sm-6">
-                  <div class="btn-group btn-group-toggle"
-                       :class="'float-right'"
-                       data-toggle="buttons">
-                    <label v-for="(option, index) in bigLineChartCategories"
+                <div class="btn-group btn-group-toggle" :class="'float-right'" data-toggle="buttons">
+                  <label v-for="(option, index) in bigLineChartCategories"
                            :key="option"
                            class="btn btn-sm btn-primary btn-simple"
                            :class="{active: mrrPerSignature.activeIndex === index}"
@@ -60,9 +58,9 @@
                              name="options" autocomplete="off"
                              :checked="mrrPerSignature.activeIndex === index">
                       {{option}}
-                    </label>
-                  </div>
+                  </label>
                 </div>
+              </div>
             </div>
           </template>
           <div class="chart-area">
@@ -80,7 +78,7 @@
       <div class="col-lg-6 col-md-12" :class="'text-left'">
         <card type="chart">
           <template slot="header">
-            <h3 class="card-title"><i class="tim-icons icon-chart-bar-32 text-info "></i>MRR geral</h3>
+            <h3 class="card-title"><i class="tim-icons icon-chart-bar-32 text-info "></i> MRR geral</h3>
           </template>
           <div class="chart-area">
             <bar-chart style="height: 100%"
@@ -97,11 +95,31 @@
       <div class="col-lg-6 col-md-12" :class="'text-left'">
         <card type="chart">
           <template slot="header">
-            <h3 class="card-title"><i class="tim-icons icon-single-02 text-success "></i> Número de clientes por assinatura </h3>
+            <div class="row">
+              <div class="col-sm-6" :class="'text-left'">
+                <h3 class="card-title"><i class="tim-icons icon-single-02 text-success "></i> Número de clientes por assinatura </h3>
+              </div>
+              <div class="col-sm-6">
+                <div class="btn-group btn-group-toggle" :class="'float-right'" data-toggle="buttons">
+                  <label v-for="(option, index) in bigLineChartCategories"
+                           :key="option"
+                           class="btn btn-sm btn-primary btn-simple"
+                           :class="{active: clientsPerSignature.activeIndex === index}"
+                           :id="index">
+                      <input type="radio"
+                             @click="initClientsPerSignature(index)"
+                             name="options" autocomplete="off"
+                             :checked="clientsPerSignature.activeIndex === index">
+                      {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
           </template>
           <div class="chart-area">
             <line-chart style="height: 100%"
                         chart-id="purple-line-chart"
+                        ref="clientsPerSignature"
                         :chart-data="clientsPerSignature.chartData"
                         :gradient-colors="clientsPerSignature.gradientColors"
                         :gradient-stops="clientsPerSignature.gradientStops"
@@ -113,7 +131,7 @@
       <div class="col-lg-6 col-md-12" :class="'text-left'">
         <card type="chart">
           <template slot="header">
-            <h3 class="card-title"><i class="tim-icons icon-coins text-warning "></i>Número de clientes atual por assinatura</h3>
+            <h3 class="card-title"><i class="tim-icons icon-coins text-warning "></i> Número de clientes atual por assinatura</h3>
           </template>
           <div class="chart-area">
             <bar-chart style="height: 100%"
@@ -184,28 +202,16 @@
           categories: []
         },
         clientsPerSignature: {
-          extraOptions: chartConfigs.purpleChartOptions,
+          allData: [],
+          activeIndex: 0,
           chartData: {
-            labels: ['30', '360', '365', '730', 'total'],
-            datasets: [{
-              label: "Data",
-              fill: true,
-              borderColor: config.colors.primary,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              pointBackgroundColor: config.colors.primary,
-              pointBorderColor: 'rgba(255,255,255,0)',
-              pointHoverBackgroundColor: config.colors.primary,
-              pointBorderWidth: 20,
-              pointHoverRadius: 4,
-              pointHoverBorderWidth: 15,
-              pointRadius: 4,
-              data: [80, 100, 70, 80, 120, 80],
-            }]
+            datasets: [{ }],
+            labels: ['30', '360', '365', '730']
           },
+          extraOptions: chartConfigs.purpleChartOptions,
           gradientColors: config.colors.primaryGradient,
-          gradientStops: [1, 0.2, 0],
+          gradientStops: [1, 0.4, 0],
+          categories: []
         },
         currencyClien: {
           extraOptions: chartConfigs.barChartOptions,
@@ -237,6 +243,7 @@
     },
     created() {
       this.updateChartData();
+      this.updateClientsPerSignature();
       this.updateMrrPerSignatureChart();
       this.defineGeneralMrr();
     },
@@ -367,6 +374,52 @@
         } else {
           this.mrrGeneral.allData = [];
         }
+      },
+      updateClientsPerSignature() {
+        if (this.apiResponse && this.apiResponse.MRR && this.apiResponse.MRR.perYear) {
+          const years = Object.keys(this.apiResponse.MRR.perYear);
+
+          this.clientsPerSignature.allData = [];
+          const orderedSignature = ["MRRMonthly", "MRRDays360", "MRRAnnually", "MRRBiennial"];
+
+          const all = [];
+          years.forEach((year) => {
+            const organized = orderedSignature.map((signature) => {
+              return parseFloat(this.apiResponse.MRR.perYear[year][signature].numberOfClients);
+            })
+            all.push(organized);
+          });
+          console.log(all);
+          this.clientsPerSignature.allData = all;
+        } else {
+          this.clientsPerSignature.allData = [];
+          this.clientsPerSignature.chartData.datasets = [{}];
+          this.clientsPerSignature.categories = [];
+        }
+      },
+      initClientsPerSignature(index) {
+        this.updateClientsPerSignature();
+        let chartData = {
+          datasets: [{
+            fill: true,
+            borderColor: config.colors.primary,
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            pointBackgroundColor: config.colors.primary,
+            pointBorderColor: 'rgba(255,255,255,0)',
+            pointHoverBackgroundColor: config.colors.primary,
+            pointBorderWidth: 20,
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 15,
+            pointRadius: 4,
+            data: this.clientsPerSignature.allData[index],
+          }],
+          labels: ['30', '360', '365', '730'],
+        }
+        this.$refs.clientsPerSignature.updateGradients(chartData);
+        this.clientsPerSignature.chartData = chartData;
+        this.clientsPerSignature.activeIndex = index;
       }
     },
     mounted() {
