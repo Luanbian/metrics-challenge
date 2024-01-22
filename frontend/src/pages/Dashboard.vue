@@ -6,21 +6,28 @@
           <template slot="header">
             <div class="row">
               <div class="col-sm-6" :class="'text-left'">
-                <h2 class="card-title"><i class="tim-icons icon-alert-circle-exc text-danger"></i> Churn Rate mensal</h2>
+                <h2 class="card-title">
+                  <i class="tim-icons icon-alert-circle-exc text-danger"></i> 
+                    Churn Rate total: 
+                    <span class="text-danger">
+                      {{apiResponse.churn.general}}
+                    </span>
+                </h2>
+                <h2 class="card-title">Churn Rate mensal</h2>
               </div>
               <div class="col-sm-6">
                 <div class="btn-group btn-group-toggle"
-                     :class="'float-right'"
-                     data-toggle="buttons">
+                  :class="'float-right'"
+                  data-toggle="buttons">
                   <label v-for="(option, index) in bigLineChartCategories"
-                         :key="option"
-                         class="btn btn-sm btn-primary btn-simple"
-                         :class="{active: bigLineChart.activeIndex === index}"
-                         :id="index">
+                    :key="option"
+                    class="btn btn-sm btn-primary btn-simple"
+                    :class="{active: bigLineChart.activeIndex === index}"
+                    :id="index">
                     <input type="radio"
-                           @click="initBigChart(index)"
-                           name="options" autocomplete="off"
-                           :checked="bigLineChart.activeIndex === index">
+                    @click="initBigChart(index)"
+                    name="options" autocomplete="off"
+                    :checked="bigLineChart.activeIndex === index">
                     {{option}}
                   </label>
                 </div>
