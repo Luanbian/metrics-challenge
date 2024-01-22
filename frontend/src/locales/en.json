@@ -1,24 +1,6 @@
 {
-  "dashboard": {
-    "usersTable": {
-      "columns": [
-        "mrr total",
-        "churn rate total",
-        "total de clientes"
-      ],
-      "data": [
-        {
-          "id": 1,
-          "mrr total": "1500",
-          "churn rate total": "39%",
-          "total de clientes": "1098"
-        }
-      ]
-    }
-  },
   "sidebar": {
     "dashboard": "dashboard",
-    "icons": "Icons",
     "maps": "Uploads"
   }
 }

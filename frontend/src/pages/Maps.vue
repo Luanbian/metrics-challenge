@@ -24,7 +24,7 @@
             type="primary"
             :disabled="!file"
           >
-            Submit
+            Enviar
           </base-button>
         </div>
       </div>
