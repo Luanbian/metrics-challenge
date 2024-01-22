@@ -8,9 +8,11 @@ import { ChurnRateService } from '../../data/services/churn.rate.service';
 import { NestApplication } from '@nestjs/core';
 import { MetricsYearService } from '../../data/services/metrics.year.service';
 import { MetricsMonthService } from '../../data/services/metrics.month.service';
+import { badRequest } from '../helpers/http.helper';
 
 describe('FileController', () => {
   let app: NestApplication;
+  let sut: FileController;
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
@@ -20,6 +22,7 @@ describe('FileController', () => {
 
     app = moduleRef.createNestApplication();
     await app.init();
+    sut = moduleRef.get<FileController>(FileController);
   });
 
   it('should upload a file', async () => {
@@ -49,4 +52,8 @@ describe('FileController', () => {
       });
     expect(response.statusCode).toEqual(500);
   })
+  it('should return bad request if file is not received', async () => {
+    const result = await sut.receiveFile(null);
+    expect(result).toEqual(badRequest('Arquivo não recebido'));
+  });
 });
