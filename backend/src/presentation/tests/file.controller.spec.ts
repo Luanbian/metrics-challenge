@@ -10,6 +10,24 @@ import { MetricsYearService } from '../../data/services/metrics.year.service';
 import { MetricsMonthService } from '../../data/services/metrics.month.service';
 import { badRequest } from '../helpers/http.helper';
 
+const createTempFile = (content, fileName) => {
+  const tempDir = path.join(__dirname, 'temp');
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir);
+  }
+
+  const filePath = path.join(tempDir, fileName);
+  fs.writeFileSync(filePath, content);
+
+  return filePath;
+};
+
+const deleteTempFile = (filePath) => {
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+};
+
 describe('FileController', () => {
   let app: NestApplication;
   let sut: FileController;
@@ -26,7 +44,7 @@ describe('FileController', () => {
   });
 
   it('should upload a file', async () => {
-    const filePath = path.join(__dirname, 'model_test.csv');
+    const filePath = createTempFile('test,model.csv,data\n1,2,3', 'test_model.csv');
     const response = await request(app.getHttpServer())
       .post('/api/file')
       .attach('file', fs.readFileSync(filePath), {
@@ -34,6 +52,7 @@ describe('FileController', () => {
         contentType: 'text/csv'
       });
     expect(response.statusCode).toBe(201);
+    deleteTempFile(filePath);
   });
   it('should return error file not found', async () => {
     const response = await request(app.getHttpServer())
@@ -43,7 +62,7 @@ describe('FileController', () => {
     expect(response.body.body).toBe("Arquivo não recebido");
   })
   it('should return error type of file not permited', async () => {
-    const filePath = path.join(__dirname, 'model_test.txt');
+    const filePath = createTempFile('test test', 'test_model.txt');
     const response = await request(app.getHttpServer())
       .post('/api/file')
       .attach('file', fs.readFileSync(filePath), {
@@ -51,6 +70,7 @@ describe('FileController', () => {
         contentType: 'text/txt'
       });
     expect(response.statusCode).toEqual(500);
+    deleteTempFile(filePath);
   })
   it('should return bad request if file is not received', async () => {
     const result = await sut.receiveFile(null);
