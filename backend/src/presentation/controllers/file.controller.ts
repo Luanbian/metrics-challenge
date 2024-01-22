@@ -56,7 +56,6 @@ export class FileController {
       const body = { MRR, churn }
       return ok(body);
     } catch (error) {
-      console.error(error);
       return serverError(error);
     }
   }
