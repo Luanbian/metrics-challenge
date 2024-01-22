@@ -2,12 +2,12 @@ import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { HttpResponse } from 'src/@types/http';
+import { HttpResponse } from '../../@types/http';
 import { badRequest, ok, serverError } from '../helpers/http.helper';
-import { MetricsSignatureService } from 'src/data/services/metrics.signature.service';
-import { xlsxToJson } from 'src/utils/xlsx.to.json';
-import { csvToJson } from 'src/utils/csv.to.json';
-import { ChurnRateService } from 'src/data/services/churn.rate.service';
+import { MetricsSignatureService } from '../../data/services/metrics.signature.service';
+import { xlsxToJson } from '../../utils/xlsx.to.json';
+import { csvToJson } from '../../utils/csv.to.json';
+import { ChurnRateService } from '../../data/services/churn.rate.service';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 

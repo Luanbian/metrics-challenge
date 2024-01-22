@@ -1,6 +1,6 @@
 import * as csvParser from 'csv-parser';
 import * as fs from 'fs';
-import { IExcelModel, excelMapper } from 'src/data/mapper/excel.mapper';
+import { IExcelModel, excelMapper } from '../data/mapper/excel.mapper';
 
 export const csvToJson = async (path: string): Promise<IExcelModel[]> => {
   return new Promise((resolve, reject) => {

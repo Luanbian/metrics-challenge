@@ -1,6 +1,6 @@
 import * as xlsx from 'xlsx';
 import { format } from "date-fns";
-import { IExcelModel, excelMapper } from 'src/data/mapper/excel.mapper';
+import { IExcelModel, excelMapper } from '../data/mapper/excel.mapper';
 
 export const xlsxToJson = (path: string): IExcelModel[] => {
   const workbook = xlsx.readFile(path);
