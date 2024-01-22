@@ -22,7 +22,7 @@
                   data-toggle="buttons">
                   <label v-for="(option, index) in bigLineChartCategories"
                     :key="option"
-                    class="btn btn-sm btn-primary btn-simple"
+                    class="btn btn-sm btn-danger btn-simple"
                     :class="{active: bigLineChart.activeIndex === index}"
                     :id="index">
                     <input type="radio"
@@ -114,7 +114,7 @@
                 <div class="btn-group btn-group-toggle" :class="'float-right'" data-toggle="buttons">
                   <label v-for="(option, index) in bigLineChartCategories"
                            :key="option"
-                           class="btn btn-sm btn-primary btn-simple"
+                           class="btn btn-sm btn-success btn-simple"
                            :class="{active: clientsPerSignature.activeIndex === index}"
                            :id="index">
                       <input type="radio"
