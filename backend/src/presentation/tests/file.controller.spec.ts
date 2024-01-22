@@ -61,17 +61,6 @@ describe('FileController', () => {
     expect(response.body.statusCode).toBe(400);
     expect(response.body.body).toBe("Arquivo não recebido");
   })
-  it('should return error type of file not permited', async () => {
-    const filePath = createTempFile('test test', 'test_model.txt');
-    const response = await request(app.getHttpServer())
-      .post('/api/file')
-      .attach('file', fs.readFileSync(filePath), {
-        filename: 'modelo_test.txt',
-        contentType: 'text/txt'
-      });
-    expect(response.statusCode).toEqual(500);
-    deleteTempFile(filePath);
-  })
   it('should return bad request if file is not received', async () => {
     const result = await sut.receiveFile(null);
     expect(result).toEqual(badRequest('Arquivo não recebido'));

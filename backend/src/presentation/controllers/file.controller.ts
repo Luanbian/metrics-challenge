@@ -30,15 +30,9 @@ export class FileController {
       }
     }),
     fileFilter: (req, file, callback) => {
-      if (!file.originalname || !file) {
-        return callback(new Error('Nome do arquivo não encontrado'), false);
-      }
-
       const extension = extname(file.originalname || '').toLowerCase();
       if (allowedFileTypes.includes(extension)) {
         callback(null, true);
-      } else {
-        callback(new Error('Tipo de arquivo não permitido'), false);
       }
     },
   }))

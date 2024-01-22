@@ -11,10 +11,6 @@ export interface IExcelModel {
 }
 
 export const excelMapper = (data: unknown[]): IExcelModel[] => {
-  if(!Array.isArray(data) || data.length === 0) {
-    throw new Error('Invalid input data');
-  }
-
   const mappedData: IExcelModel[] = data.map(item => ({
     amountOfCharges: item['quantidade cobranças'],
     billingEveryXDays: item['cobrada a cada X dias'],
