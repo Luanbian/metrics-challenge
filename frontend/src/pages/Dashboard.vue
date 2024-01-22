@@ -2,16 +2,6 @@
   <div>
     <div class="row">
       <div class="col-12">
-        <card class="card" :header-classes="{'text-right': isRTL}">
-          <h4 slot="header" class="card-title">Informações gerais</h4>
-          <div class="table-responsive">
-            <user-table></user-table>
-          </div>
-        </card>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -154,10 +144,6 @@
           </div>
         </card>
       </div>
-    </div>
-    <div>
-      <p>Api response</p>
-      <pre>{{ JSON.stringify(apiResponse) }}</pre>
     </div>
   </div>
 </template>
