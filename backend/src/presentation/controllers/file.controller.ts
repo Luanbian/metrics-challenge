@@ -8,9 +8,11 @@ import { MetricsSignatureService } from '../../data/services/metrics.signature.s
 import { xlsxToJson } from '../../utils/xlsx.to.json';
 import { csvToJson } from '../../utils/csv.to.json';
 import { ChurnRateService } from '../../data/services/churn.rate.service';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 const allowedFileTypes = ['.xlsx', '.csv'];
 
+@ApiTags('API')
 @Controller('api/file')
 export class FileController {
   constructor (
@@ -36,6 +38,10 @@ export class FileController {
       }
     },
   }))
+  @ApiBody({description: 'Arquivo a ser processado (formatos suportados: .xlsx, .csv)'})
+  @ApiResponse({ status: 200, description: 'Retorna MRR e Churn rate calculados com base no arquivo enviado' })
+  @ApiResponse({ status: 400, description: 'Requisição inválida ou arquivo não recebido' })
+  @ApiResponse({ status: 500, description: 'Erro interno no servidor' })
   async receiveFile(@UploadedFile() file: Express.Multer.File): Promise<HttpResponse> {
     if (!file) {
       return badRequest('Arquivo não recebido');
