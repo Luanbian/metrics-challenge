@@ -2,6 +2,7 @@
   <div>
     <div class="row">
       <div class="col-12">
+        <!-- churn rate chart -->
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -47,6 +48,7 @@
         </card>
       </div>
       <div class="col-lg-6 col-md-12" :class="'text-left'">
+        <!-- mrr per signature chart -->
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -83,9 +85,12 @@
         </card>
       </div>
       <div class="col-lg-6 col-md-12" :class="'text-left'">
+        <!-- mrr general chart -->
         <card type="chart">
           <template slot="header">
-            <h3 class="card-title"><i class="tim-icons icon-chart-bar-32 text-info "></i> MRR geral</h3>
+            <div class="col-sm-6" :class="'text-left'">
+              <h3 class="card-title"><i class="tim-icons icon-chart-bar-32 text-info "></i> MRR geral</h3>
+            </div>
           </template>
           <div class="chart-area">
             <bar-chart style="height: 100%"
@@ -97,9 +102,8 @@
           </div>
         </card>
       </div>
-    </div>
-    <div class="row">
       <div class="col-lg-6 col-md-12" :class="'text-left'">
+        <!-- clients per signature chart -->
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -136,9 +140,12 @@
         </card>
       </div>
       <div class="col-lg-6 col-md-12" :class="'text-left'">
+        <!-- currency clients chart -->
         <card type="chart">
           <template slot="header">
-            <h3 class="card-title"><i class="tim-icons icon-coins text-warning "></i> Número de clientes atual por assinatura</h3>
+            <div class="col-sm-6" :class="'text-left'">
+              <h3 class="card-title"><i class="tim-icons icon-coins text-warning "></i> Número de clientes atual por assinatura</h3>
+            </div>
           </template>
           <div class="chart-area">
             <bar-chart style="height: 100%"
