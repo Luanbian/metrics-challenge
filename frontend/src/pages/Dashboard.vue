@@ -2,6 +2,16 @@
   <div>
     <div class="row">
       <div class="col-12">
+        <card class="card" :header-classes="{'text-right': isRTL}">
+          <h4 slot="header" class="card-title">Informações gerais</h4>
+          <div class="table-responsive">
+            <user-table></user-table>
+          </div>
+        </card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -141,16 +151,6 @@
                        :gradient-stops="currencyClients.gradientStops"
                        :extra-options="currencyClients.extraOptions">
             </bar-chart>
-          </div>
-        </card>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <card class="card" :header-classes="{'text-right': isRTL}">
-          <h4 slot="header" class="card-title">Informações gerais</h4>
-          <div class="table-responsive">
-            <user-table></user-table>
           </div>
         </card>
       </div>
@@ -417,10 +417,12 @@
       },
       defineCurrencyClients() {
         if (this.apiResponse && this.apiResponse.MRR && this.apiResponse.MRR.general) {
-          const orderedSignature = ["MRRMonthly", "MRRDays360", "MRRAnnually", "MRRBiennial", "MRR"];
+          const orderedSignature = ["MRRMonthly", "MRRDays360", "MRRAnnually", "MRRBiennial"];
           const all = orderedSignature.map((signature) => {
             return parseFloat(this.apiResponse.MRR.general[signature].numberOfClients);
           })
+          const total = all.reduce((ac, act) => ac + act);
+          all.push(total);
           this.currencyClients.allData = all;
           let chartData = {
             datasets: [{
@@ -431,7 +433,7 @@
               borderDashOffset: 0.0,
               data: this.currencyClients.allData,
             }],
-            labels: ['30', '360', '365', '730'],
+            labels: ['30', '360', '365', '730', 'total'],
           }
           this.currencyClients.chartData = chartData;
         } else {
