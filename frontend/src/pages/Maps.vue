@@ -60,6 +60,7 @@ export default {
           }
         });
         store.commit('setResponse', response.data.body);
+        this.$router.push('/dashboard');
       } catch (error) {
         console.error('Api error: ', error);
       }
