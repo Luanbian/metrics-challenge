@@ -30,6 +30,23 @@ describe('FileController', () => {
         filename: 'modelo_test.csv',
         contentType: 'text/csv'
       });
-    expect(response.status).toBe(201);
+    expect(response.statusCode).toBe(201);
   });
+  it('should return error file not found', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/api/file')
+      .attach('file', undefined, {});
+    expect(response.body.statusCode).toBe(400);
+    expect(response.body.body).toBe("Arquivo não recebido");
+  })
+  it('should return error type of file not permited', async () => {
+    const filePath = path.join(__dirname, 'model_test.txt');
+    const response = await request(app.getHttpServer())
+      .post('/api/file')
+      .attach('file', fs.readFileSync(filePath), {
+        filename: 'modelo_test.txt',
+        contentType: 'text/txt'
+      });
+    expect(response.statusCode).toEqual(500);
+  })
 });
