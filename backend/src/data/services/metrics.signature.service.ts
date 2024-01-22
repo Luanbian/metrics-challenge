@@ -98,7 +98,7 @@ export class MetricsSignatureService {
           separate.biennial.push(item);
           break;
         default:
-          throw new Error(`${item} fora do padrão de assinatura`);
+          throw new Error(`${item.subscriberID} fora do padrão de assinatura`);
       }
     }
     return separate;
