@@ -27,7 +27,7 @@ O projeto em seu backend e frontend tem:
 - [x] Clean code
 - [ ] Desorganização e bagunça
 
-### Por baixo dos panos
+### Stack
 
 O projeto em seu backend e frontend foram usadas as tecnologias:
 
