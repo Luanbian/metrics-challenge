@@ -75,6 +75,18 @@ Para testar o Dashboard copybase, siga estas etapas:
 ```
   npm run test
 ```
+## 📗 Documentação Dashboard copybase
+
+Para ver a documentação do Dashboard copybase, siga estas etapas:
+
+> vá na pasta backend
+```
+  npm start
+```
+> com backend rodando acesse
+```
+  http://localhost:3000/api
+```
 
 ## 🤝 Colaboradores
 
